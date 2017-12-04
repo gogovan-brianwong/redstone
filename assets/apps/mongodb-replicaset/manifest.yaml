@@ -1,0 +1,74 @@
+replicaSet: rs0
+replicas: {{ app_detail_basic_replicas }}
+port: {{ app_detail_custom_port }}
+
+auth:
+  enabled: true
+  adminUser: "{{ app_detail_account_db_username }}"
+  adminPassword: "{{ app_detail_account_db_password }}"
+  key: "{{ app_detail_account_db_password }}"
+  # existingKeySecret:
+  # existingAdminSecret:
+
+# Specs for the Docker image for the init container that establishes the replica set
+installImage:
+  name: registry.allbright.local:5000/mongodb-install
+  tag: 0.4
+  pullPolicy: {{ app_detail_basic_imagepullpolicy }}
+  pullSecret: {{ app_detail_basic_imagepullsecrets }}
+
+# Specs for the MongoDB image
+image:
+  name: {{ app_detail_basic_image }}
+  tag: {{ app_detail_basic_version }}
+  pullPolicy: {{ app_detail_basic_imagepullpolicy }}
+  pullSecret: {{ app_detail_basic_imagepullsecrets }}
+
+# Annotations to be added to MongoDB pods
+podAnnotations: {}
+
+podAntiAffinity: "soft"
+
+resources:
+{% if app_detail_resource_enable %}
+  limits:
+    cpu: {{ app_detail_resource_cpu_limit }}m
+    memory: {{ app_detail_resource_ram_limit }}Mi
+{% endif %}
+  requests:
+    cpu: {{ app_detail_resource_cpu_request }}
+    memory: {{ app_detail_resource_ram_request }}
+
+persistentVolume:
+{% if not app_detail_db_persist_enable %}
+  enabled: false # boolean
+{% else %}
+  enabled: true # boolean
+{% endif %}
+  ## mongodb-replicaset data Persistent Volume Storage Class
+  ## If defined, storageClassName: <storageClass>
+  ## If set to "-", storageClassName: "", which disables dynamic provisioning
+  ## If undefined (the default) or set to null, no storageClassName spec is
+  ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+  ##   GKE, AWS & OpenStack)
+  ##
+  storageClass: {{ app_detail_db_sc_name }}
+  accessModes:
+    - {{ app_detail_db_access_mode }}
+  size: {{ app_detail_db_capacity }}Gi
+  annotations: {}
+
+# Annotations to be added to the service
+serviceAnnotations: {}
+
+# Entries for the MongoDB config file
+configmap:
+  storage:
+    dbPath: {{ app_detail_custom_dbpath }}
+  net:
+    port: {{ app_detail_custom_port }}
+  replication:
+    replSetName: rs0
+# security:
+#   authorization: enabled
+#   keyFile: /keydir/key.txt

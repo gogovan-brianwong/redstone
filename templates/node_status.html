@@ -1,0 +1,725 @@
+{% extends "base.html" %}
+{% block content %}
+
+
+    <style>
+        .form-group-toponly {
+
+            margin-top: 35px;
+
+        }
+
+        .form-group-k8s {
+
+            margin-bottom: 25px;
+
+        }
+
+        .col-border {
+            border: 1px solid #c8d1d8;
+            border-radius: 5px;
+
+        }
+
+        .modal-btn {
+            border-top-right-radius: 6px;
+            border-bottom-left-radius: 6px;
+            border-top-left-radius: 6px;
+            border-bottom-right-radius: 6px;
+
+        }
+
+        #node_detail_modal div.modal-dialog {
+
+            width: 800px;
+            height: 500px;
+            left: 450px;
+            top: 150px;
+
+        }
+
+        #node_detail_modal div.modal-content {
+
+            border-radius: 6px;
+
+        }
+
+        .modal-action {
+            position: fixed;
+            margin-top: 20px;
+            margin-left: -300px
+        }
+
+        th {
+            text-align: center;
+
+        }
+
+        tr {
+            text-align: center;
+        }
+
+        td {
+            text-align: center;
+
+        }
+
+        td.hostname {
+            color: #588fc4;
+        }
+
+        td.hostname:hover {
+            text-decoration: underline;
+
+            cursor: pointer;
+
+        }
+
+        #node-selection tbody td {
+            vertical-align: middle;
+        }
+
+        .hide {
+            display: none;
+        }
+
+        .invisible {
+
+            visibility: hidden;
+
+        }
+
+        #node-selection .progress-bar {
+            vertical-align: middle;
+        }
+
+    </style>
+
+    <!--commonmain content start-->
+
+    <section id="main-content">
+        <section class="wrapper ">
+
+            <!-- content page header start-->
+            <div class="row">
+                <div class="col-lg-12 ">
+                    <h3 class="page-header"><i class="fa fa-table"></i> Node </h3>
+
+                </div>
+            </div>
+            <!-- content page header end-->
+
+            <!-- table page start-->
+
+
+            <div class="col-lg-12 " id="nodeTableCarousel">
+
+                {% include 'node/node_detail_modal_lg.html' %}
+                {% include 'pub/modal_confirm_box.html' %}
+                {#                    {% include 'node/node_modal_2.html' %}#}
+
+
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <!-- collapse example start-->
+                            <a class="btn btn-primary pull-left" role="button" data-toggle="collapse"
+                               href="#collapseExample"
+                               aria-expanded="false" aria-controls="collapseExample">
+                                Add node
+                            </a>
+                            <div id="refresh_hostlist" class="btn btn-warning"><i class="fa fa-refresh"></i></div>
+
+                            <div class="pull-right"><p style="font-size: 35px;">Nodes List</p></div>
+                        </div>
+                    </div>
+                    <!-- Collapse Form start -->
+                    <div class="row">
+                        <div class="collapse" id="collapseExample">
+
+                            <div class="col-border" style="position: relative; z-index: 50">
+
+                                <form id="add_host_form" class="form-horizontal"
+                                      style="position: relative; margin-top: 15px;">
+                                    <div class="form-group">
+                                        <label for="add_host_name" class="col-sm-2 control-label text-left">Host
+                                            name:</label>
+                                        <div id="add_host_name" class="col-sm-2"
+                                             style="position: relative; z-index: 100">
+
+                                            <input type="text" class="form-group-sm form-control"
+                                                   name="add_host_name"
+                                                   placeholder="HostName">
+                                            <span id="hn_loading_icon" class="hide"
+                                                  style="position: absolute; z-index: 120; top: 2px; left: 280px;"><img
+                                                    style="width: 25px; height: 25px"
+                                                    src="/static/img/icons/gravity-forms-ajax-spinner.gif"
+                                                    alt=""> </span>
+                                            <span id="hn_accept_icon" class="hide"
+                                                  style="position: absolute; z-index: 120; top: 2px; left: 280px;"><img
+                                                    style="width: 20px; height: 20px"
+                                                    src="/static/img/icons/accept-icon.png" alt=""> </span>
+
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="add_host_ip" class="col-sm-2 control-label text-left">Host
+                                            IP:</label>
+                                        <div id="add_host_ip" class="col-sm-2">
+
+                                            <input type="text" class="form-group-sm form-control"
+                                                   name="add_host_ip"
+                                                   placeholder="IP address">
+                                        </div>
+                                        <div id="add_host_subnet" class="col-sm-1"
+                                             style="position: relative; z-index: 100">
+                                            <input type="text" class="form-group-sm form-control"
+                                                   name="add_host_subnet"
+                                                   placeholder="Suffix">
+                                            <span id="hip_loading_icon" class="hide"
+                                                  style="position: absolute; z-index: 120; top: 2px; left: 140px;"><img
+                                                    style="width: 25px; height: 25px"
+                                                    src="/static/img/icons/gravity-forms-ajax-spinner.gif"
+                                                    alt=""> </span>
+                                            <span id="hip_accept_icon" class="hide"
+                                                  style="position: absolute; z-index: 120; top: 2px; left: 140px;"><img
+                                                    style="width: 20px; height: 20px"
+                                                    src="/static/img/icons/accept-icon.png" alt=""> </span>
+
+                                        </div>
+                                    </div>
+                                </form>
+
+                                <form id="add_host_label" class="form-horizontal"
+                                      style="position: relative; margin-top: 30px;">
+                                    <div id="add_host_label_form_1" class="form-group"
+                                         style="position: relative; z-index: 90;">
+                                        <label for="add_host_label_key_1"
+                                               class="col-sm-2 control-label text-left">
+                                            Label:</label>
+                                        <div id="add_host_label_key_1" class="col-sm-1">
+
+                                            <input type="text" class="form-group-sm form-control"
+                                                   name="host_label_key" placeholder="Key">
+                                        </div>
+                                        <div style="position: absolute; z-index: 100; top: 5px; left: 420px;">
+                                            <strong>＝</strong></div>
+                                        <div id="add_host_label_val_1" class="col-sm-1">
+                                            <input type="text" class="form-group-sm form-control"
+                                                   name="host_label_val" placeholder="Value">
+
+                                        </div>
+                                    </div>
+                                    <!-- Add label button start -->
+                                    <a id="add_label_plus"
+                                       style="position: absolute; z-index: 100; top: 5px; left: 33%;"><i
+                                            class="glyphicon glyphicon-plus"></i></a>
+                                </form>
+                                <!-- Add label button end -->
+
+
+                                <form id="sch_radio" class="form-horizontal"
+                                      style="position: relative; z-index: 110">
+
+
+                                    <div class="form-group">
+                                        <label for="schedulable"
+                                               class="col-sm-2 control-label text-left">Schedulable:</label>
+                                        <div class="col-sm-1">
+                                            <div class="radio">
+                                                <label><input type="radio" name="sch_radioOption"
+                                                              value="1">Yes</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-1">
+                                            <div class="radio">
+                                                <label><input type="radio" name="sch_radioOption" value="2"
+                                                              checked="">No</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group">
+
+                                        <div class="col-sm-offset-2 col-sm-10">
+
+                                            <button id="addhost_btn" type="button" class="btn  btn-info">Add
+                                            </button>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;
+                                            <button id="addhost_close_btn" type="button"
+                                                    class="btn btn-default">
+                                                Close
+                                            </button>
+                                        </div>
+
+                                    </div>
+
+
+                                    <div id="progress-loader"
+                                         style="position: absolute; z-index: 51; width: 600px; height: auto; top: 70px; right: 200px;">
+
+                                        <img src="/static/img/icons/loader.gif" class="hide" alt=""
+                                             name="progress-loading"
+                                             style="width: 120px;height: 120px; z-index: 200">
+                                        <div id="progress-finish" class="hide">
+                                            <img src="/static/img/icons/kuba_icon_ok.png" name="progress-finish"
+                                                 style="width: 60px; height: 60px; z-index: 150">
+                                            <br><br>
+                                            <p class="text-primary"></p>
+
+                                        </div>
+
+                                    </div>
+                                </form>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div id="node-datatable">
+
+                         {% include 'node/node_datatable.html' %}
+
+                    </div>
+                    <!-- collapse example end-->
+
+                </div>
+            </div>
+            {% include "node/node_detail_page.html" %}
+
+            <!-- table page end-->
+
+
+        </section>
+    </section>
+
+    <script>
+
+        $('#collapse_btn').on('click', function () {
+            $('#collapseForm').collapse('toggle');
+
+        });
+
+
+        $(document).ready(function () {
+
+
+            $('#node-selection').DataTable();
+
+
+
+        });
+
+
+        $('#node-tbody').on('click', 'td.hostname', function () {
+            var selected_host_uid = $(this).prev().text().trim();
+            var selected_host_name = $(this).text().trim();
+            {#            $('button#updatebtn').prop('disabled', true);#}
+            $('#selectNodeDetailCarousel span p.fieldcontent').remove();
+            $('input[name=node_labels]').val('');
+            $('input[name=node_annotations]').val('');
+            $('input[name=nodeSchedulable]').removeAttr('checked', '');
+            $('#nodeTableCarousel').slideToggle(600, "swing", function () {
+                $('#selectNodeDetailCarousel').removeClass('hide');
+                $('.node-detail-title').empty().append(selected_host_name);
+
+                fetchNodeDetailByOne(selected_host_uid, selected_host_name)
+            });
+
+
+        });
+
+
+        function fetchNodeDetailByOne(uid, nodename) {
+            var id_prefix = 'node_';
+            $.ajax({
+
+                url: '/nodes/details/' + uid + '/',
+                type: 'post',
+                data: { data: nodename },
+
+                success: function (e) {
+                    ret = JSON.parse(e);
+                    $.each(ret.data, function (k, v) {
+                        if (v instanceof Object) {
+                            {#                            $.each(v, function () {#}
+                            $.each(v, function (idx, e) {
+                                $("input[name=" + id_prefix + k).tagsinput('add', e);
+                            });
+                        }
+                        $("#" + id_prefix + k).append("<p class=fieldcontent>" + v + "</p>")
+                    });
+
+                    if (ret.data.unschedulable !== null) {
+
+                        $('#nodeSchedulable').prop('checked', 'checked');
+
+                    }
+
+                }
+            })
+
+        }
+
+
+        $('button[name=backToNode]').on('click', function () {
+
+            $('#nodeTableCarousel').slideToggle(600, "swing", function () {
+                $('#selectNodeDetailCarousel').addClass('hide')
+
+
+            });
+
+        });
+
+        $('a[name=host_detail]').on('click', function () {
+            var selected_host_uid = $(this).parents('tr').find('td.uid').text().trim();
+            var selected_host_name = $(this).parents('tr').find('td.uid').next().text().trim();
+            $('#nodeTableCarousel').slideToggle(600, "swing", function () {
+                $('#selectNodeDetailCarousel').removeClass('hide');
+            });
+
+        });
+
+        $('#updatebtn').on('click', function () {
+
+            var select_node_uid = $('#node_unique_id p').text();
+            var select_node_name = $('#node_name p').text();
+            var select_node_annotations = $('input[name=node_annotations]').tagsinput('items'); // List of all annotations shown in input box
+            var select_node_labels = $('input[name=node_labels]').tagsinput('items'); // List of all labels shown in input box
+            var select_node_schedulableOption = $("input[name=nodeSchedulable]").prop('checked'); // true or false
+{#            console.log(select_node_name, select_node_uid, select_node_annotations, select_node_labels, select_node_schedulableOption);#}
+
+
+            $.ajax({
+                url: '/nodes/update/' + select_node_uid + '/',
+                type: 'post',
+                data: { nodename: select_node_name, node_annotations: JSON.stringify(select_node_annotations), node_labels: JSON.stringify(select_node_labels), node_schedulableOption: select_node_schedulableOption },
+                success: function (e) {
+                    ret = JSON.parse(e);
+                    if (ret.status) {
+
+                        msg = select_node_name + '\t\tconditions has been changed successfully.';
+                        notification_success(msg);
+                        window.location.href='/nodes/index/'
+                    }
+                }
+
+            })
+        });
+
+
+        $('#addhost_close_btn').on('click', function () {
+
+            $('#collapseExample').collapse('hide');
+
+        });
+
+
+        $("a[name='host_remove']").on('click', function () {
+
+            var uid = $(this).parent().parent().parent().parent().parent().children().first().next().text();
+            var ipaddr = $(this).parent().parent().parent().parent().parent().children().first().next().next().next().text();
+            var hostname = $(this).parent().parent().parent().parent().parent().children().first().next().next().text();
+            $('#modal-confirm-windows').modal('show');
+            $('#lineModalLabel').text('Confirm to remove\t\t' + hostname);
+            $('#confirm_content').children().last().children().empty().append(hostname);
+            $('#saveSelected').on('click', function () {
+                $('#modal-confirm-windows').modal('hide');
+
+                $.ajax({
+                    url: '/nodes/delhost.html/',
+                    type: 'post',
+                    data: {"hostname": hostname, "ipaddr": ipaddr },
+
+                    success: function (data) {
+                        ret = JSON.parse(data);
+                        if (ret.status) {
+
+                            var msg = 'Node\t\t\t' + hostname + 'has been removed successfully';
+                            notification_success(msg);
+                            window.location.href='/nodes/index/'
+                        }
+
+                    }
+
+                })
+
+
+            });
+
+
+        });
+
+
+        $('#add_label_plus').on('click', function () {
+            var counter = parseInt($(this).prev().attr('id').slice(-1));
+            var html = '<div id="add_host_label_form_' + (counter + 1) + '"class="form-group" style="position: relative; z-index: 90;"> <div class="col-sm-offset-2 col-sm-1"><input id="add_host_labe_key_' + ( counter + 1 ) + '" type="text" class="form-group-sm form-control" name="host_label_key" placeholder="Key"> </div> <div style="position: absolute; z-index: 100; top: 5px; left: 420px;"><strong>＝</strong></div>'
+            html += '<div class="col-sm-1"><input id="add_host_labe_key_' + ( counter + 1 ) + '" type="text" class="form-group-sm form-control" name="host_label_val" placeholder="Value"></div>';
+            html += '<a style="position: absolute; top: 5px; left: 33%; z-index: 100;"><i class="glyphicon glyphicon-minus"></i></a></div>';
+            $(this).before(html);
+            {#            $(this).prev().append($(this).prev().clone())#}
+
+
+        });
+        $(document).on('click', '.glyphicon-minus', function () {
+
+            $(this).parent().parent().remove()
+        });
+
+
+        $('#addhost_btn').on('click', function () {
+
+            {#            $('#progress-loader').empty();#}
+            {#            $('#progress-finish').empty();#}
+
+            var htmlcode = 'Node ' + $("input[name='add_host_name']").val() + ' has been added to cluster successfully';
+
+            $.ajax({
+                url: '/nodes/addhost/',
+                type: 'post',
+                data: {
+                    'formdata': $('#add_host_form').serialize(),
+                    'formlabel': $('#add_host_label').serialize(),
+                    'formschedulable': $('#sch_radio').serialize()
+                },
+                beforeSend: function () {
+                    $('#progress-loader').children().first().removeClass('hide')
+                },
+                success: function (data) {
+                    var ret = JSON.parse(data);
+                    if (ret.status === 201) {
+                        $('#progress-loader').children().first().addClass('hide');
+                        $('#progress-finish').removeClass('hide').children('p').append(htmlcode);
+
+                    }
+
+                }
+            });
+        });
+
+
+        function check_if_empty(obj) {
+
+            var err_msg = 'This field is required';
+            var html_code = '<span style="position: absolute; z-index: 110; color: red">' + err_msg + '</span>';
+            obj.empty().val('').after(html_code);
+            setTimeout(function () {
+                obj.next().remove()
+            }, 3000);
+            return false
+        }
+
+        // uniqure host name check for host name field end
+        $("input[name='add_host_name']").on('blur', function () {
+
+            var hostname = $(this).val().trim();
+            if (hostname.length === 0) {
+                check_if_empty($("input[name='add_host_name']"));
+                return false
+            }
+            else {
+
+                $.ajax({
+                    url: '/nodes/addhost/auth/hostname/',
+                    type: 'post',
+                    data: {'input_host': hostname},
+                    beforeSend: function () {
+                        $('#hn_loading_icon').removeClass('hide');
+                    },
+                    success: function (e) {
+                        var ret = JSON.parse(e);
+                        process_returned_data(ret.status, ret.err_msg);
+                        return true
+                    }
+                });
+
+            }
+        });
+
+
+        function process_returned_data(status_code, errmsg) {
+
+            if (status_code !== 200) {
+
+                var html_code = '<span style="position: absolute; z-index: 120; color: red">' + errmsg + '</span>';
+                $("input[name='add_host_name']").val('').empty().after(html_code);
+
+                $('#hn_loading_icon').addClass('hide');
+                setTimeout(function () {
+                    $("input[name='add_host_name']").next().remove()
+                }, 3000)
+            }
+            else {
+                $('#hn_loading_icon').addClass('hide');
+                $('#hn_accept_icon').removeClass('hide');
+            }
+        }   // uniqure host name check for host name field end
+
+        // Syntax check ip address field start
+        $("input[name='add_host_ip']").on('blur', function () {
+
+            var hostip = $(this).val().trim();
+
+            if (hostip.length === 0) {
+                check_if_empty($("input[name='add_host_ip']"));
+                return false
+            }
+            else {
+                check_ipaddr(hostip);
+                return false
+            }
+
+        });
+
+        function check_ipaddr(ip) {
+            if (fnValidateIPAddress(ip) === true) {
+                return true;
+            }
+
+            else {
+                var errmsg = 'This ip address is invalid.';
+                var html_code = '<span style="position: absolute; z-index: 110; color: red">' + errmsg + '</span>';
+                $("input[name='add_host_ip']").val('').empty().after(html_code);
+                setTimeout(function () {
+                    $("input[name='add_host_ip']").next().remove()
+                }, 3000);
+                return false
+            }
+        }
+
+
+        function fnValidateIPAddress(ipaddr) {
+            ipaddr = ipaddr.replace(/\s/g, "");//remove spaces for checking
+
+            var re = /^(\d|[1-9]\d|1\d\d|2([0-4]\d|5[0-5]))\.(\d|[1-9]\d|1\d\d|2([0-4]\d|5[0-5]))\.(\d|[1-9]\d|1\d\d|2([0-4]\d|5[0-5]))\.(\d|[1-9]\d|1\d\d|2([0-4]\d|5[0-5]))$/;
+            //all 4 quadrants of the IP
+            if (re.test(ipaddr)) {
+                //split into units with dots "."
+                var parts = ipaddr.split(".");
+                //if the first unit/quadrant of the IP is zero
+                if (parseInt(parseFloat(parts[0])) == 0) {
+                    return false;
+                }
+                //if the fourth unit/quadrant of the IP is zero
+                if (parseInt(parseFloat(parts[3])) == 0) {
+                    return false;
+                }
+                //if any part is greater than 255
+                for (var i = 0; i < parts.length; i++) {
+                    if (parseInt(parseFloat(parts[i])) > 255) {
+                        return false;
+                    }
+                }
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        // Syntax check ip address field end
+
+
+        $("input[name='add_host_subnet']").on('blur', function subnet() {
+
+            var hostsubnet = $(this).val().trim();
+            if (hostsubnet.length === 0) {
+                check_if_empty($("input[name='add_host_subnet']"));
+                return false;
+            }
+            else if (hostsubnet > 32) {
+                check_subnet($("input[name='add_host_subnet']"));
+                return false;
+            }
+            else {
+                var hostip = $("input[name='add_host_ip']").val().trim();
+                if (check_ipaddr(hostip) === true) {
+                    check_if_ipreachable(hostip, hostsubnet);
+
+                    {#                    console.log('OK'); // action to send ajax to validate if ip can be reachable.#}
+                    return true
+                }
+            }
+        });
+
+        function check_subnet(obj) {
+
+            var err_msg = 'This value exceed maximum 32 subnets.';
+            var html_code = '<span style="position: absolute; z-index: 110; color: red">' + err_msg + '</span>';
+            obj.val('').after(html_code);
+            setTimeout(function () {
+                obj.next().remove()
+            }, 3000);
+            return false
+
+        }
+
+        function check_if_ipreachable(ip, subnet) {
+            $.ajax({
+                url: '/nodes/addhost/auth/hostip/',
+                type: 'post',
+                data: {'host_ip': ip, 'host_subnet': subnet},
+                beforeSend: function () {
+                    $('#hip_loading_icon').removeClass('hide');
+                },
+                success: function (e) {
+
+                    ret = JSON.parse(e);
+                    {#                    console.log(ret);#}
+                    if (ret.status === 200) {
+                        $('#hip_loading_icon').addClass('hide');
+                        $('#hip_accept_icon').removeClass('hide');
+                        return true
+                    }
+                    else {
+                        var html_code = '<span style="position: absolute; z-index: 110; color: red">' + ret.err_msg + '</span>';
+                        $("input[name='add_host_ip']").val('').empty().after(html_code);
+                        $("input[name='add_host_subnet']").val('').empty();
+                        $('#hip_loading_icon').addClass('hide');
+                        setTimeout(function () {
+                            $("input[name='add_host_ip']").next().remove();
+
+                        }, 3000);
+                        return false
+
+                    }
+                }
+            })
+        }
+
+        $('#refresh_hostlist').on('click', function () {
+
+            location.reload();
+        });
+
+
+        {#                $('#node-tbody').on('click', 'td.hostname', function () {#}
+        {#                    var selected_host_uid = $(this).prev().text().trim();#}
+        {#                    var selected_host_name = $(this).text().trim();#}
+        {##}
+        {#                    $#}
+        {#                    select_host_detail(selected_host_uid, selected_host_name);#}
+        {##}
+        {##}
+        {#                });#}
+
+
+        function update_node_detail(updatedJSONObj, nodename, uid) {
+            {#            console.log(typeof updatedJSONObj, updatedJSONObj);#}
+            $.ajax({
+                url: '/nodes/update/' + uid + '/',
+                type: 'post',
+                data: {data: JSON.stringify(updatedJSONObj), hostname: nodename},
+                success: function (response) {
+                    ret = JSON.parse(response);
+                    console.log(ret);
+                }
+
+
+            })
+        }
+
+
+    </script>
+
+{% endblock %}

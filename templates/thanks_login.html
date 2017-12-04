@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Thanks Login</title>
+    <script src="/static/js/jquery-1.12.4.min.js"></script>
+</head>
+<body>
+
+<div><h3>You seem not to login system yet. Please go to <a href="/common/login/">here</a> to login first.
+    or wait for <span></span> seconds to redirect login page.</h3></div>
+
+
+</body>
+
+<script>
+
+    $(document).ready(function () {
+        var count = 10;
+        setInterval(function () {
+
+            $('span').text(count);
+            count -= 1;
+            if (count === -1){
+                window.location.href = '/common/login/'
+            }
+        }, 1000);
+
+
+    });
+
+
+
+
+
+</script>
+
+
+</html>

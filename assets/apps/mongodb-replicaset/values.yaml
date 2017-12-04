@@ -1,0 +1,68 @@
+replicaSet: rs0
+replicas: 3
+port: 28017
+
+auth:
+  enabled: true
+  adminUser: "admin"
+  adminPassword: "123"
+  key: "123"
+  # existingKeySecret:
+  # existingAdminSecret:
+
+# Specs for the Docker image for the init container that establishes the replica set
+installImage:
+  name: registry.allbright.local:5000/mongodb-install
+  tag: 0.4
+  pullPolicy: IfNotPresent
+  pullSecret: regsecret-admin
+
+# Specs for the MongoDB image
+image:
+  name: registry.allbright.local:5000/mongodb
+  tag: 3.4
+  pullPolicy: IfNotPresent
+  pullSecret: regsecret-admin
+
+# Annotations to be added to MongoDB pods
+podAnnotations: {}
+
+podAntiAffinity: "soft"
+
+resources:
+
+  requests:
+    cpu: 100
+    memory: 200
+
+persistentVolume:
+
+  enabled: true # boolean
+
+  ## mongodb-replicaset data Persistent Volume Storage Class
+  ## If defined, storageClassName: <storageClass>
+  ## If set to "-", storageClassName: "", which disables dynamic provisioning
+  ## If undefined (the default) or set to null, no storageClassName spec is
+  ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+  ##   GKE, AWS & OpenStack)
+  ##
+  storageClass: fast
+  accessModes:
+    - ReadWriteOnce
+  size: 1Gi
+  annotations: {}
+
+# Annotations to be added to the service
+serviceAnnotations: {}
+
+# Entries for the MongoDB config file
+configmap:
+  storage:
+    dbPath: /data/db
+  net:
+    port: 28017
+  replication:
+    replSetName: rs0
+# security:
+#   authorization: enabled
+#   keyFile: /keydir/key.txt

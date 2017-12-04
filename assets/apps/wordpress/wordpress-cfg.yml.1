@@ -1,0 +1,91 @@
+image: {{ image_name }}:{{ image_version }} #fixed
+
+imagePullPolicy: {{ image_pull_policy }} # select
+
+replicas: {{ app_replicas }} #input
+
+wordpressUsername: {{ app_username }} #input
+
+
+wordpressEmail: {{ app_email }} #input
+
+wordpressFirstName: {{ app_firstname }} #input
+
+wordpressLastName: {{ app_lastname }} #input
+
+wordpressBlogName: {{ app_blog_name }} #input
+
+allowEmptyPassword: {{ allow_empty_password }} #boolean
+
+
+mariadb:
+  ## MariaDB admin password
+  ## ref: https://github.com/bitnami/bitnami-docker-mariadb/blob/master/README.md#setting-the-root-password-on-first-run
+  ##
+  mariadbRootPassword: {{ db_root_password }} #input
+
+  ## Create a database
+  ## ref: https://github.com/bitnami/bitnami-docker-mariadb/blob/master/README.md#creating-a-database-on-first-run
+  ##
+  mariadbDatabase: {{ db_name }} #input
+
+  ## Create a database user
+  ## ref: https://github.com/bitnami/bitnami-docker-mariadb/blob/master/README.md#creating-a-database-user-on-first-run
+  ##
+  mariadbUser: {{ db_username }} #input
+
+  ## Password for mariadbUser
+  ## ref: https://github.com/bitnami/bitnami-docker-mariadb/blob/master/README.md#creating-a-database-user-on-first-run
+  ##
+  mariadbPassword: {{ db_password }} #input
+
+  ## Enable persistence using Persistent Volume Claims
+  ## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
+  ##
+  persistence:
+    enabled: {{ db_persistence_enable }} # boolean
+    ## If defined, volume.beta.kubernetes.io/storage-class: <storageClass>
+    ## Default: volume.alpha.kubernetes.io/storage-class: default
+    ##
+    storageClass: {{ db_storageclass_name }} #select
+    accessMode: {{ db_storageclass_accessmode }} #select
+    size: {{ db_storageclass_size }}Gi #input
+
+serviceType: {{ app_service_type }} #select
+
+healthcheckHttps: {{ app_healthcheck }} # boolean
+
+ingress:
+    enabled: {{ app_ingress_enable }} # boolean
+    hostname: {{ app_ingress_vhostname } #input}
+
+    ## Ingress annotations
+    ##
+    annotations:
+      {% for item in app_annotations -%} #input
+      {{ app_ingress_annotations }} # key:value
+      {%- endfor %} 
+#      kubernetes.io/ingress.class: nginx
+#      ingress.kubernetes.io/ssl-redirect: "false"
+#      ingress.kubernetes.io/proxy-body-size: 500m
+    ## Ingress TLS configuration
+    ## Secrets must be manually created in the namespace
+    ##
+    tls:
+      - secretName: {{ app_ingress_secret_name }} #select
+        hosts:
+          - {{ app_ingress_vhostname }} #input
+
+persistence:
+  enabled: {{ app_persistence_enable }} #bootlean
+  ## If defined, volume.beta.kubernetes.io/storage-class: <storageClass>
+  ## Default: volume.alpha.kubernetes.io/storage-class: default
+  ##
+  storageClass: {{ app_storageclass_name }} #select
+  accessMode: {{ app_storageclass_accessmode }} #select
+  size: {{ app_storageclass_size }}Gi #input
+
+resources:
+  requests:
+    memory: {{ app_resource_req_memory }}Mi #input
+    cpu: {{ app_resource_req_cpu }}m #input

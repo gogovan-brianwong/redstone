@@ -1,0 +1,63 @@
+class UserDetails(models.Model):  # Mysql DB connection
+    username = models.CharField(max_length=20)
+    password = models.CharField(max_length=20)
+    email = models.CharField(max_length=30, null=True)
+    gender = models.CharField(max_length=10, default=None)
+    age = models.IntegerField(default=None)
+    position = models.CharField(max_length=20, null=True)
+
+
+
+class AppType(models.Model):
+    typename = models.CharField(max_length=30)
+
+    def __str__(self):
+        return self.typename
+
+
+class AppName(models.Model):
+    appname = models.CharField(max_length=32)
+    appdetails = models.CharField(max_length=1000)
+    thumbnail_path = models.CharField(max_length=60, default=None)
+    type_name = models.ForeignKey(AppType)
+
+    def __str__(self):
+        return self.appname, self.appdetails, self.thumbnail_path
+
+
+class AppVersion(models.Model):
+    appversion = models.CharField(max_length=20)
+    app_name = models.ForeignKey(AppName)
+
+    def __str__(self):
+        return self.appversion
+
+
+class AppRepository(models.Model):
+    apprepository = models.CharField(max_length=32)
+
+    def __str__(self):
+        return self.apprepository
+
+
+class AppImage(models.Model):
+    imagename = models.CharField(max_length=20)
+    app_name = models.ForeignKey(AppName)
+    app_version = models.ForeignKey(AppVersion)
+    app_repository = models.ForeignKey(AppRepository)
+
+    def __str__(self):
+        return self.imagename
+
+
+class AppDeployOption(models.Model):
+    basic_tab = models.BooleanField(default=True)
+    policy_tab = models.BooleanField(default=True)
+    app_persist_tab = models.BooleanField(default=True)
+    db_persist_tab = models.BooleanField(default=True)
+    resources_tab = models.BooleanField(default=True)
+    service_tab = models.BooleanField(default=True)
+    app_name = models.ForeignKey(AppName)
+
+    def __str__(self):
+        return self.basic_tab, self.policy_tab, self.app_persist_tab, self.db_persist_tab, self.resources_tab, self.service_tab

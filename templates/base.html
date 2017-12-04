@@ -1,0 +1,511 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <style>
+        * {
+            font-family: "Ubuntu", Sans-Serif;
+        !important;
+
+        }
+
+        #selectNodeDetailCarousel .fieldname p {
+            white-space: nowrap;
+        }
+
+        .fieldname {
+
+            color: #99999d;
+        }
+
+        .fieldcontent {
+            color: #191919;
+        }
+
+        .hide {
+
+            display: none;
+
+        }
+
+        .center {
+            margin-top: 50px;
+        }
+
+        .modal.fade .modal-dialog {
+            position: absolute;
+            top: 20%;
+            left: 30%;
+            margin-top: -100px;
+            margin-left: 100px;
+
+        }
+
+        .modal-header {
+            padding-bottom: 5px;
+        }
+
+        .modal-footer {
+            padding: 0;
+        }
+
+        .modal-footer .btn-group button {
+            height: 40px;
+            border-top-left-radius: 5px;
+            border-top-right-radius: 5px;
+            border-bottom-left-radius: 5px;
+            border-bottom-right-radius: 5px;
+            border: none;
+            border-right: 1px solid #ddd;
+
+        }
+
+        .modal-footer .btn-group:last-child > button {
+            border-right: 0;
+        }
+
+
+    </style>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Creative ">
+    <meta name="author" content="GeeksLabs">
+    <meta name="keyword" content="Creative, Dashboard, Admin, Template, Theme, Bootstrap, Responsive, Retina, Minimal">
+
+    <title>Kubernetes Dashboard</title>
+
+
+    <!-- Bootstrap CSS -->
+    <link href="/static/bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- bootstrap theme -->
+    <link href="/static/css/bootstrap-theme.css" rel="stylesheet">
+    <!--external css-->
+    <!-- font icon -->
+    <link href="/static/css/elegant-icons-style.css" rel="stylesheet"/>
+    <link href="/static/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet"/>
+
+    <!-- owl carousel -->
+    <link rel="stylesheet" href="/static/css/owl.carousel.css" type="text/css">
+    <link href="/static/css/jquery-jvectormap-1.2.2.css" rel="stylesheet">
+    <!-- Custom styles -->
+    <link href="/static/css/widgets.css" rel="stylesheet">
+    <link href="/static/css/style.css" rel="stylesheet">
+    <link href="/static/plugins/datatables/media/css/dataTables.bootstrap.css" rel="stylesheet">
+    <link href="/static/plugins/datatables/extensions/Responsive/css/dataTables.responsive.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/jquery-ui-1.10.4.min.css">
+    <link href="/static/jsoneditor/dist/jsoneditor.min.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="/static/css/custom/material-switch.css">
+    <link rel="stylesheet" href="/static/css/custom/hr-divider.css">
+    <link rel="stylesheet" href="/static/css/custom/k8s-ui.css">
+    <link rel="stylesheet" href="/static/css/bootstrap-switch.min.css">
+    <link rel="stylesheet" href="/static/css/custom/bootstrap-tagsinput.css">
+</head>
+<body>
+<!-- container section start -->
+<section id="container">
+
+
+    <header class="header dark-bg">
+        <div class="toggle-nav">
+            <div class="icon-reorder tooltips" data-original-title="Toggle Navigation" data-placement="bottom"><i
+                    class="icon_menu"></i></div>
+        </div>
+
+        <!--logo start-->
+        <a href="/corelogic/common/index/" class="logo">Kubernetes</a>
+        <!--logo end-->
+
+        <div class="nav search-row" id="top_menu">
+            <!--  search form start -->
+            <ul class="nav top-menu">
+                <li>
+                    <form class="navbar-form">
+                        <input class="form-control" placeholder="Search" type="text">
+                    </form>
+                </li>
+            </ul>
+            <!--  search form end -->
+        </div>
+        <!-- Split button -->
+
+        <!-- Split button end -->
+
+        <div class="top-nav notification-row">
+            <!-- notificatoin dropdown start-->
+            <ul class="nav pull-right top-menu">
+
+
+                <!-- alert notification start-->
+                <li id="alert_notificatoin_bar" class="dropdown">
+                    <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+
+                        <i class="icon-bell-l"></i>
+                        <span id="alert_badge" class="badge bg-important"></span>
+                    </a>
+                    <ul class="dropdown-menu extended notification">
+
+                        <li>
+                            <p class="blue">You have 0 new notifications</p>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <span class="label label-primary"><i class="icon_error-triangle"></i></span>
+                                Pod Alerts
+                                <span class="small italic pull-right">5 mins</span>
+                            </a>
+                        </li>
+
+
+                        <li>
+                            <a href="#">See all notifications</a>
+                        </li>
+                    </ul>
+                </li>
+                <!-- alert notification end-->
+                <!-- user login dropdown start-->
+                <li class="dropdown">
+                    <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                            <span class="profile-ava">
+                                <img alt="" src="/static/img/admin_icon.jpg" style="width: 40px; height: 40px">
+                            </span>
+                        <span id="login_user" class="username">{{ request.session.username }}</span>
+                        <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu extended logout">
+                        <div class="log-arrow-up"></div>
+                        <li class="eborder-top">
+                            <a href="#"><i class="icon_profile"></i> My Profile</a>
+                        </li>
+
+                        <li>
+                            <a href="javascript:;" name="logout"><i class="icon_key_alt"></i> Log Out</a>
+                        </li>
+
+                    </ul>
+                </li>
+                <!-- user login dropdown end -->
+            </ul>
+            <!-- notificatoin dropdown end-->
+        </div>
+
+    </header>
+    <!--header end-->
+
+    <!--sidebar start-->
+    <aside>
+        <div id="sidebar" class="nav-collapse" style="z-index: 50">
+
+
+            <!-- sidebar menu start-->
+            <ul class="sidebar-menu">
+                <li class="">
+                    <a class="" href="/common/dashboard/">
+                        <i class="icon_house_alt"></i>
+                        <span><strong>Dashboard</strong></span>
+                    </a>
+                </li>
+
+
+                <li class="sub-menu">
+                    <a href="javascript:;" class="">
+                        <i class="icon_desktop"></i>
+                        <span>Cluster</span>
+                        <span class="menu-arrow arrow_carrot-right"></span>
+                    </a>
+                    <ul class="sub">
+                        <li><a class="" href="/nodes/status/">Namespaces</a></li>
+                        <li><a class="" href="/nodes/index/">Nodes</a></li>
+                        <li><a class="" href="/nodes/status/">Persistent Volumes</a></li>
+                        <li><a class="" href="/nodes/status/">StorageClasses</a></li>
+                    </ul>
+                </li>
+
+                <li class="sub-menu ">
+                    <a href="javascript:;" class="">
+                        <i class="icon_genius"></i>
+                        <span>Workload</span>
+                        <span class="menu-arrow arrow_carrot-right"></span>
+                    </a>
+                    <ul class="sub">
+                        <li><a class="" href="/pods/status">DaemonSets</a></li>
+                        <li><a class="" href="/deployment/index/">Deployments</a></li>
+                        <li><a class="" href="/pods/status">Jobs</a></li>
+                        <li><a class="" href="/pods/status">Pods</a></li>
+                        <li><a class="" href="/pods/status">Replica Sets</a></li>
+                        <li><a class="" href="/pods/status">Replication Controllers</a></li>
+                        <li><a class="" href="/pods/status">StatefulSets</a></li>
+                        <li><a class="" href="/hpa/index/">HPA</a></li>
+
+                    </ul>
+                </li>
+
+                <li class="sub-menu">
+                    <a href="javascript:;" class="">
+                        <i class="icon_balance"></i>
+                        <span>Load Balancing</span>
+                        <span class="menu-arrow arrow_carrot-right"></span>
+                    </a>
+                    <ul class="sub">
+                        <li><a class="" href="/pods/status">Ingresses</a></li>
+                        <li><a class="" href="/pods/status">Services</a></li>
+
+                    </ul>
+                </li>
+
+
+                <li class="">
+                    <a class="" href="/nodes/status/">
+                        <i class="fa fa-user-secret"></i>
+                        <span>Secrets</span>
+                    </a>
+                </li>
+
+
+                <li class="sub-menu">
+                    <a href="javascript:;" class="">
+                        <i class="icon_adjust-horiz"></i>
+                        <span>Config</span>
+                        <span class="menu-arrow arrow_carrot-right"></span>
+                    </a>
+                    <ul class="sub">
+                        <li><a class="" href="/pods/status">Config</a></li>
+                        <li><a class="" href="/pods/status">ConfigMap</a></li>
+
+                    </ul>
+                </li>
+
+
+                <li class="sub-menu">
+                    <a href="javascript:;" class="">
+                        <i class="icon_cloud"></i>
+                        <span>Storage</span>
+                        <span class="menu-arrow arrow_carrot-right"></span>
+                    </a>
+                    <ul class="sub">
+                        <li><a class="active" href="node_status.html">PV Claims</a></li>
+                    </ul>
+                </li>
+
+                <li class="">
+                    <a class="" href="/registry/login/">
+                        <i class="icon_cloud_alt"></i>
+                        <span>Registry</span>
+                    </a>
+                </li>
+                <li class="sub-menu">
+                    <a href="javascript:;" class="">
+                        <i class="icon_bag"></i>
+                        <span>Applications</span>
+                        <span class="menu-arrow arrow_carrot-right"></span>
+                    </a>
+                    <ul class="sub">
+                        <li><a class="active" href="/application/index/">Repository</a></li>
+                        <li><a class="active" href="node_status.html">Logging</a></li>
+                        <li><a class="active" href="node_status.html">Monitoring</a></li>
+                    </ul>
+                </li>
+                <li class="sub-menu">
+                    <a href="javascript:;" class="">
+                        <i class="fa fa-rebel"></i>
+                        <span>Role</span>
+                        <span class="menu-arrow arrow_carrot-right"></span>
+                    </a>
+                    <ul class="sub">
+                        <li><a class="active" href="/application/index/">RoleBinding</a></li>
+                        <li><a class="active" href="node_status.html">ClusterRB</a></li>
+                    </ul>
+                </li>
+                <li class="">
+                    <a class="" href="/topology/index/">
+                        <i class="icon_compass"></i>
+                        <span>Topology</span>
+                    </a>
+                </li>
+                {% if request.session.group_from == 'Administrator' %}
+                 <li class="">
+                    <a style="background-color: #3c5141" href="/systemconfig/index/">
+                        <i class="icon_cogs"></i>
+                        <span>System Setting</span>
+                    </a>
+                </li>
+                {% endif %}
+
+                <li>
+                    <label class="control-label owl-controls" for="ns_select"></label>
+                    <select id="ns_select" class="form-control">
+
+                    </select>
+                </li>
+
+            </ul>
+            <!-- sidebar menu end-->
+        </div>
+    </aside>
+    <!-- script start -->
+    <script src="/static/js/jquery-2.2.4.min.js"></script>
+    {#    <script src="/static/js/jquery-ui-1.10.4.min.js"></script>#}
+
+    <!-- bootstrap -->
+    <script src="/static/js/bootstrap.min.js"></script>
+    <!-- nice scroll -->
+    <script src="/static/js/jquery.scrollTo.min.js"></script>
+    <script src="/static/js/jquery.nicescroll.js" type="text/javascript"></script>
+    <!-- charts scripts -->
+    <script src="/static/assets/jquery-knob/js/jquery.knob.js"></script>
+    <script src="/static/js/owl.carousel.js"></script>
+    <script src="/static/js/jquery.customSelect.min.js"></script>
+
+    <script src="/static/js/scripts.js"></script>
+    <script src="/static/js/jquery-jvectormap-1.2.2.min.js"></script>
+    <script src="/static/js/jquery-jvectormap-world-mill-en.js"></script>
+    <script src="/static/js/gdp-data.js"></script>
+
+    <!-- nifty JS for datatable -->
+    {#    <script src="/static/plugins/datatables/media/js/jquery.dataTables.js"></script>#}
+    <script src="/static/js/jquery.dataTables.min.js"></script>
+    <script src="/static/plugins/datatables/media/js/dataTables.bootstrap.js"></script>
+    <script src="/static/plugins/datatables/extensions/Responsive/js/dataTables.responsive.min.js"></script>
+    <script src="/static/js/gauge.min.js"></script>
+    <script src="/static/js/jquery.bxslider.min.js"></script>
+    <script src="/static/js/loadingoverlay.min.js"></script>
+    <script src="/static/js/loadingoverlay_progress.min.js"></script>
+    <script src="/static/jquery-validation-1.16.0/dist/jquery.validate.min.js"></script>
+    <script src="/static/jquery-validation-1.16.0/dist/additional-methods.min.js"></script>
+
+    <script type='text/javascript' src="/static/js/jquery-ui-1.10.4.min.js"></script>
+
+    <script src="/static/js/d3.v4.min.js"></script>
+    <script src="/static/jsoneditor/dist/jsoneditor.min.js"></script>
+    <script src="/static/js/bootstrap-select.js"></script>
+    <script src="/static/js/bootstrap-notify.min.js"></script>
+    <script src="/static/pub/k8s-ui.js"></script>
+    <script src="/static/js/dataTables.cellEdit.js"></script>
+    <script src="/static/css/custom/bootstrap-tagsinput.min.js"></script>
+    <script src="/static/js/bootstrap-switch.min.js"></script>
+    <script src="/static/js/jquery.serialize-object.min.js"></script>
+    <script src="/static/js/pagination.min.js"></script>
+    <script src="/static/js/bootbox.min.js"></script>
+    {#    <script src="/static/js/websocketbridge.js"></script>#}
+    <!-- script end -->
+
+    {% include "pub/modal_confirm_box.html" %}
+    <!--sidebar end-->
+
+    <!-- content start -->
+    {% block content %}
+    {% endblock content %}
+    <!--  content end -->
+
+
+</section>
+<!-- container section start -->
+
+
+<script>
+
+
+    $(document).ready(function () {
+        {#        get_ttl_msg();#}
+        {#        get_login_user();#}
+{#        get_all_ns('#ns_select');#}
+    });
+
+    function get_ttl_msg() {
+        setInterval(function () {
+            $.ajax({
+                url: '/common/dashboard/get_ttl_msg/',
+                type: 'get',
+                success: function (data) {
+                    ret = JSON.parse(data);
+                    $('#alert_badge').text(ret.current_num);
+                }
+            })
+        }, 300000)
+    }
+
+
+    //knob
+    $(function () {
+        $(".knob").knob({
+            'draw': function () {
+                $(this.i).val(this.cv + '%')
+            }
+        })
+    });
+
+    //carousel
+    $(document).ready(function () {
+        $("#owl-slider").owlCarousel({
+            navigation: true,
+            slideSpeed: 300,
+            paginationSpeed: 400,
+            singleItem: true
+
+        });
+    });
+
+
+    $(function () {
+        $('select.styled').customSelect();
+    });
+
+    /* ---------- Map ---------- */
+    $(function () {
+        $('#map').vectorMap({
+            map: 'world_mill_en',
+            series: {
+                regions: [{
+                    values: gdpData,
+                    scale: ['#000', '#000'],
+                    normalizeFunction: 'polynomial'
+                }]
+            },
+            backgroundColor: '#eef3f7',
+            onLabelShow: function (e, el, code) {
+                el.html(el.html() + ' (GDP - ' + gdpData[code] + ')');
+            }
+        });
+    });
+
+    function confirm_dialog(action, content, callback) {
+        if (!callback || typeof callback !== 'function') {
+            alert('error');
+        }
+        $('#modal-confirm-windows').modal('show');
+        $('.modal-title').empty().append('Comfirm to ' + '' + action);
+        $('#confirm_content').children().last().children('i').text(content);
+        $('#saveSelected').on('click', function () {
+
+            $('#modal-confirm-windows').modal('hide');
+            callback(true)
+        });
+
+    }
+
+
+    $('a[name=logout]').on('click', function () {
+        current_user = $('#login_user').text()
+        console.log(current_user);
+        $.ajax({
+            url: '/common/logout/',
+            type: 'post',
+            data: {'username': current_user},
+            success: function (e) {
+                ret = JSON.parse(e);
+
+                if (ret.status) {
+
+                    window.location.href = '/common/login'
+
+                }
+            }
+
+
+        })
+    })
+
+</script>
+
+</body>
+
+< /html>

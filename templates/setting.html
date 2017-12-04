@@ -1,0 +1,208 @@
+{% extends "base.html" %}
+{% block content %}
+    <style>
+        .nav-tabs {
+            border-bottom: 2px solid #DDD;
+        }
+
+        .nav-tabs > li.active > a, .nav-tabs > li.active > a:focus, .nav-tabs > li.active > a:hover {
+            border-width: 0;
+        }
+
+        .nav-tabs > li > a {
+            border: none;
+            color: #ffffff;
+            background: #286580;
+        }
+
+        .nav-tabs > li.active > a, .nav-tabs > li > a:hover {
+            border: none;
+            color: #5a4080 !important;
+            background: #fff;
+        }
+
+        .nav-tabs > li > a::after {
+            content: "";
+            background: #5a4080;
+            height: 2px;
+            position: absolute;
+            width: 100%;
+            left: 0px;
+            bottom: -1px;
+            transition: all 250ms ease 0s;
+            transform: scale(0);
+        }
+
+        .nav-tabs > li.active > a::after, .nav-tabs > li:hover > a::after {
+            transform: scale(1);
+        }
+
+        .tab-nav > li > a::after {
+            background: # #5a4080 none repeat scroll 0% 0%;
+            color: #fff;
+        }
+
+        .tab-pane {
+            padding: 15px 0;
+        }
+
+        .tab-content {
+            padding: 15px
+        }
+
+        .nav-tabs > li {
+            width: 20%;
+            text-align: center;
+        }
+
+        .card {
+            background: #FFF none repeat scroll 0% 0%;
+            box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.3);
+            margin-bottom: 30px;
+        }
+
+        body {
+            background: #EDECEC;
+            padding: 30px
+        }
+
+        @media all and (max-width: 724px) {
+            .nav-tabs > li > a > span {
+                display: none;
+            }
+
+            .nav-tabs > li > a {
+                padding: 5px 5px;
+            }
+        }
+
+        .well-setting {
+            background-color: white;
+            margin-top: 10px;
+            border: 1px solid #dedede;
+            border-left: 4px solid #9e540b;
+            padding: 10px;
+            border-radius: 5px
+
+        }
+
+    </style>
+
+
+    <section id="main-content">
+        <section class="wrapper">
+
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12">
+                        <!-- Nav tabs -->
+                        <h2 class="well">System Settings</h2>
+                        <div class="card">
+
+                            <ul class="nav nav-tabs" role="tablist">
+                                <li role="presentation" class="active"><a href="#settings_master"
+                                                                          aria-controls="settings_master" role="tab"
+                                                                          data-toggle="tab"><i class="fa fa-server"></i> 
+                                    <span>Master</span></a></li>
+                                <li role="presentation"><a href="#settings_node" aria-controls="settings_node"
+                                                           role="tab"
+                                                           data-toggle="tab"><i class="fa fa-tv"></i> 
+                                    <span>Node</span></a></li>
+                                <li role="presentation"><a href="#settings_docker" aria-controls="settings_docker"
+                                                           role="tab"
+                                                           data-toggle="tab"><i class="fa fa-cubes"></i>
+                                    <span>Docker</span></a>
+                                </li>
+                                <li role="presentation"><a href="#settings_application"
+                                                           aria-controls="settings_application" role="tab"
+                                                           data-toggle="tab"><i class="fa fa-suitcase"></i> 
+                                    <span>Application</span></a></li>
+                                <li role="presentation"><a href="#settings_etcd" aria-controls="settings_etcd"
+                                                           role="tab"
+                                                           data-toggle="tab"><i class="fa fa-sitemap"></i> 
+                                    <span>etcd</span></a>
+                                </li>
+                            </ul>
+
+                            <!-- Tab panes -->
+                            <div class="tab-content">
+                                <div role="tabpanel" class="tab-pane active" id="settings_master">
+
+                                        <!-- About -->
+                                        <div class="row">
+                                            <div class="col-md-2 sidebar sidebar-left" style="border-right: 1px solid lightgrey">
+                                                <ul class="nav nav-pills nav-stacked">
+                                                    <li class="active"><a data-toggle="pill"
+                                                                          href="#settings_apiserver">API Server</a></li>
+                                                    <li><a data-toggle="pill" href="#setting_controller">Controller
+                                                        Manager</a></li>
+                                                    <li><a data-toggle="pill" href="#setting_scheduler">Scheduler</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div class="col-md-10">
+                                                <div class="tab-content">
+
+                                                  {% include "settings/master_apiserver.html" %}
+
+
+                                                    <div id="setting_controller" class="tab-pane fade">
+                                                        <h3>test 1</h3>
+                                                        <p>Some content in menu 1.</p>
+                                                    </div>
+                                                    <div id="setting_scheduler" class="tab-pane fade">
+                                                        <h3>test 2</h3>
+                                                        <p>Some content in menu 2.</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                </div>
+                                <div role="tabpanel" class="tab-pane" id="settings_node">Lorem Ipsum is simply dummy
+                                    text of
+                                    the printing and typesetting industry. Lorem Ipsum has been the industry's standard
+                                    dummy text ever since the 1500s, when an unknown printer took a galley of type and
+                                    scrambled it to make a type specimen book.
+                                </div>
+                                <div role="tabpanel" class="tab-pane" id="settings_docker">Lorem Ipsum is simply dummy
+                                    text of
+                                    the printing and typesetting industry. Lorem Ipsum has been the industry's standard
+                                    dummy text ever since the 1500s, when an unknown printer took a galley of type and
+                                    scrambled it to make a type specimen book. It has survived not only five centuries,
+                                    but also the leap into electronic typesetting, remaining essentially unchanged. It
+                                    was popularised in the 1960s with the release of Letraset sheets containing Lorem
+                                    Ipsum passages, and more recently with desktop publishing software like Aldus
+                                    PageMaker including versions of Lorem Ipsum.
+                                </div>
+                                <div role="tabpanel" class="tab-pane" id="settings_application">Lorem Ipsum is simply
+                                    dummy text of
+                                    the printing and typesetting industry. Lorem Ipsum has been the industry's standard
+                                    dummy text ever since the 1500s, when an unknown printer took a galley of type and
+                                    scrambled it to make a type specimen book. It has survived not only five centuries,
+                                    but also the leap into electronic typesetting, remaining essentially unchanged. It
+                                    was popularised in the 1960s with the release of Letraset sheets containing Lorem
+                                    Ipsum passage..
+                                </div>
+                                <div role="tabpanel" class="tab-pane" id="settings_etcd">Lorem Ipsum is simply dummy
+                                    text of the
+                                    printing and typesetting industry. Lorem Ipsum has been the industry's standard
+                                    dummy text ever since the 1500s, when an unknown printer took a galley of type and
+                                    scrambled it to make a type specimen book. It has survived not only five centuries,
+                                    but also the leap into electronic typesetting, remaining essentially unchanged. It
+                                    was popularised in the 1960s with the release of Letraset sheets containing Lorem
+                                    Ipsum passage..
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </section>
+    </section>
+
+
+{% endblock %}

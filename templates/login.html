@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Creative - Bootstrap 3 Responsive Admin Template">
+    <meta name="author" content="GeeksLabs">
+    <meta name="keyword" content="Creative, Dashboard, Admin, Template, Theme, Bootstrap, Responsive, Retina, Minimal">
+    <link rel="shortcut icon" href="/static/img/favicon.png">
+
+    <title>Login Page 2 | Creative - Bootstrap 3 Responsive Admin Template</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <!-- bootstrap theme -->
+    <link href="/static/css/bootstrap-theme.css" rel="stylesheet">
+    <!--external css-->
+    <!-- font icon -->
+    <link href="/static/css/elegant-icons-style.css" rel="stylesheet"/>
+    <link href="/static/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet"/>
+    <!-- Custom styles -->
+    <link href="/static/css/style.css" rel="stylesheet">
+    <link href="/static/css/style-responsive.css" rel="stylesheet"/>
+
+    <script src="/static/js/jquery-1.12.4.min.js"></script>
+    <script src="/static/js/loadingoverlay.min.js"></script>
+    <script src="/static/js/loadingoverlay_progress.min.js"></script>
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 -->
+    <!--[if lt IE 9]>
+    <script src="/static/js/html5shiv.js"></script>
+    <script src="/static/js/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body class="login-img-body">
+<div class="container">
+
+    <form id='login_form' action="/common/login/" method="post" class="login-form">
+        <div class="login-wrap">
+            <p class="login-img"><i class="icon_lock_alt"></i></p>
+            <div class="input-group">
+                <span class="input-group-addon"><i class="icon_profile"></i></span>
+                <input name="username" type="text" class="form-control" placeholder="Username" autofocus>
+            </div>
+            <div class="input-group">
+                <span class="input-group-addon"><i class="icon_key_alt"></i></span>
+                <input name="passwd" type="password" class="form-control" placeholder="Password">
+
+            </div>
+            <span id="err_msg"
+                  style="color: red; font-style: oblique; position: relative; margin-left: 70px;"> {{ error_message }}</span>
+            <button id='login_btn' class="btn btn-primary btn-lg btn-block" type="submit">Login</button>
+            <button class="btn btn-info btn-lg btn-block" type="submit">Signup</button>
+        </div>
+    </form>
+</div>
+<script>
+
+
+{#    $(document).ready(function () {#}
+{##}
+{#        $('#login_btn').on('click', function () {#}
+{##}
+{#            $.ajax({#}
+{#                url: '/common/login/',#}
+{#                type: 'post',#}
+{#                cache: false,#}
+{#                data: $('#login_form').serialize(),#}
+{#                beforeSend: function () {#}
+{#                    overlayer();#}
+{#                }#}
+{#                success: function (e) {#}
+{##}
+{#                    var ret = JSON.parse(e);#}
+{#                    console.log(e.message);#}
+{#                    if (ret.status === 200) {#}
+{#                        overlayer();#}
+{#                       window.location.href = '/common/dashboard/'#}
+{#                    }#}
+{#                    else {#}
+{##}
+{#                        alert('Login Failed')#}
+{##}
+{#                    }#}
+{#                }#}
+{##}
+{#            })#}
+{##}
+{##}
+{#        });#}
+{##}
+{#    });#}
+{#        function overlayer() {#}
+{#            $.LoadingOverlay('show', {#}
+{#                imagePostion: "center right",#}
+{#                size: "50%",#}
+{#                fade: true,#}
+{#                zIndex: 9999#}
+{#            });#}
+{##}
+{#        }#}
+
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,8 @@
+https://kubernetes.feisky.xyz/appendix/ecosystem.html
+
+stage('Checkout'){
+           steps {
+
+                //git url: 'http://gogs-gogs/brian/k8s-ui.git',credentialsId: 'brian'
+                    }
+               }

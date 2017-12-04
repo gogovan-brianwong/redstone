@@ -1,0 +1,428 @@
+{% extends "base.html" %}
+{% block content %}
+
+
+
+
+    <!--commonmain content start-->
+    <section id="main-content">
+        <section class="wrapper">
+
+
+            <!-- content page header start-->
+            <div class="row">
+                <div class="col-lg-12">
+                    <h3 class="page-header"><i class="fa fa-table"></i>Topology</h3>
+                    <ol class="breadcrumb">
+                        <li><i class="fa fa-home"></i><a href="/common/dashboard/">Home</a></li>
+                        <li><i class="fa fa-th-list"></i>Topology</li>
+                    </ol>
+                </div>
+            </div>
+            <!-- content page header end-->
+            <!-- table page start-->
+            <div class="row">
+                <div class="col-lg-12">
+
+
+                    <div class="col-md-8">
+                        <button class="btn btn-group btn-primary" id="activate_d3">Boom!</button>
+
+                        <div id="#" class="col-md-6">
+
+                            <input id="search" type="text" class="form-group form-control"
+
+                                   placeholder="name or resource type">
+                        </div>
+                        <button class="btn btn-group btn-info" type="button" id="searchnode">Search</button>
+                        <button class="btn btn-group btn-danger" type="button" id="cleartext">Clear</button>
+                        <button class="btn btn-group btn-warning" type="button" id="switch_move">Switch</button>
+
+
+                    </div>
+
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-1">
+                    <div class="collapse" id="collapseLegend" style="position: absolute; left: 50px; ">
+                        <form id="topo-legend" class="form form-group">
+
+                            <div class="form-group"><i class="fa fa fa-legal">&nbsp;&nbsp;<strong>Legend</strong></i>
+                            </div>
+                            <p class="cluster img-circle"><span class="legend-dsp">Cluster</span><a href="#"
+                                                                                                    class="resource-badge k8s-badge"></a>
+                            </p>
+                            <p class="host img-circle"><span class="legend-dsp">Node</span><a href="#"
+                                                                                              class="resource-badge k8s-badge"></a>
+                            </p>
+                            <p class="rcontroller img-circle"><span class="legend-dsp">ReplicationController</span><a
+                                    href="#" class="resource-badge k8s-badge"></a></p>
+                            <p class="service img-circle"><span class="legend-dsp">Service</span><a href="#"
+                                                                                                    class="resource-badge k8s-badge"></a>
+                            </p>
+                            <p class="pod img-circle"><span class="legend-dsp">Pod</span><a href="#"
+                                                                                            class="resource-badge k8s-badge"></a>
+                            </p>
+                            <p class="docker-container img-circle"><span class="legend-dsp">Container</span><a href="#"
+                                                                                                               class="resource-badge k8s-badge"></a>
+                            </p>
+                            <p class="container-image img-circle"><span class="legend-dsp">Image</span><a href="#"
+                                                                                                          class="resource-badge k8s-badge"></a>
+                            </p>
+
+                        </form>
+                    </div>
+                    <div class="form form-group hide_legend" style="position: absolute; left: 50px; top: 220px">
+                        <button id="clear_legend_select" class="btn btn-sm btn-default">All</button>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-lg-offset-1">
+                    <svg id="svg_topology" width="900" height="900"></svg>
+                </div>
+
+                <div class="collapse" id="collapseProperty">
+                    <div class="col-md-4 ">
+                        <div class="well" style="width: 550px; height: 400px; overflow-x: hidden;">
+                            <table id="prop-box" class="table table-striped">
+                                <thead>
+                                <tr>
+                                    <td>Property</td>
+                                    <td>Value</td>
+                                </tr>
+                                </thead>
+                                <tbody id="prop-tbody">
+
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+
+                    </div>
+                </div>
+
+            </div>
+            <!-- table page end-->
+            <script>
+
+
+                $(".img-circle").on('click', function () {
+                    $('p').removeAttr('style');
+                    $('circle').removeAttr('style');
+
+                    var atype = $(this).children('span').text().trim();
+                    $(this).siblings('p').css('opacity', '0.3').css('background-color', '#3D3D3D');
+
+                    unselectedVal = $("title[name!=" + atype + "]");
+
+
+                    $.each(unselectedVal, function (idx, eachitem) {
+
+                        $(eachitem).parent().css('opacity', '0.1').parents().find('line').css('opacity', '0.1')
+
+
+                    });
+                });
+
+                /* ############## */
+
+                $('#clear_legend_select').on('click', function () {
+                    $('p').removeAttr('style');
+                    $('circle').removeAttr('style');
+                    $('line').css('opacity', '')
+                });
+
+
+                $('#activate_d3').on('click', function () {
+
+                    $("svg").empty();
+
+                    {#                    $("#prop-tbody").children('td').remove()#}
+                    get_insight_data();
+
+                    $('#collapseLegend').collapse('show').next('div').removeClass('hide_legend');
+
+                });
+
+
+                $('#cleartext').on('click', function () {
+                    $('#search').val("")
+                });
+
+                /* ############## */
+
+                function get_insight_data() {
+                    var rel_list = [];
+                    var rsrc_list = [];
+                    var json_data = {};
+                    $.ajax({
+                        url: 'http://192.168.151.44:5555/cluster',
+                        type: 'get',
+                        dataType: 'json',
+                        success: function (response) {
+                            $.each(response.relations, function (idx, eachrel) {
+                                rel_list.push({
+                                    'source': eachrel.source,
+                                    'target': eachrel.target,
+                                    'value': eachrel.type
+
+                                });
+
+                            });
+                            $.each(response.resources, function (idx, eachrsrc) {
+                                rsrc_list.push({
+                                    'id': eachrsrc.id,
+                                    'label': eachrsrc.annotations.label,
+                                    'group': eachrsrc.type
+                                })
+                            });
+                            json_data = {
+                                links: rel_list,
+                                nodes: rsrc_list
+                            };
+
+                            render_svg(json_data,'#svg_topology');// render svg based on json data.
+                            retrieve_resources_amount(response);
+
+                            return json_data;
+                        },
+                        error: function () {
+                            alert('Error occurred')
+                        }
+
+                    });
+                }
+
+
+                function retrieve_resources_amount(data) {
+                    var dlist = data.resources;
+
+                    var current = null;
+                    var cnt = 0;
+                    var tlist = [];
+                    for (var i = 0; i < dlist.length; i++) {
+                        if (dlist[i].type !== current) {
+                            if (cnt > 0) {
+                                tlist.push({
+                                    'type': current,
+                                    'num': cnt
+                                });
+                            }
+                            current = dlist[i].type;
+                            cnt = 1;
+                        } else {
+                            cnt++;
+                        }
+                    }
+                    if (cnt > 0) {
+                        tlist.push({
+                            'type': current,
+                            'num': cnt
+                        });
+                    }
+                    sendValue(tlist);
+
+                }
+
+                function sendValue(data) {
+
+                    $.each(data, function (idx, item) {
+                        $('#topo-legend').children().find('span').each(function () {
+                            if (item.type === $(this).text()) {
+                                $(this).next().text(item.num)
+                            }
+                        })
+                    })
+                }
+
+                /* ###################### */
+                /* D3 force start */
+{#                function render_svg(jdata, svg_elem) {#}
+{#                    var svg = d3.select(svg_elem),#}
+{#                        width = +svg.attr("width"),#}
+{#                        height = +svg.attr("height");#}
+{##}
+{#                    var color = d3.scaleOrdinal(d3.schemeCategory20);#}
+{##}
+{#                    var simulation = d3.forceSimulation()#}
+{#                        .force("link", d3.forceLink().id(function (d) {#}
+{#                            return d.id;#}
+{#                        }))#}
+{#                        .force("charge", d3.forceManyBody())#}
+{#                        .force("center", d3.forceCenter(width / 2, height / 2));#}
+{##}
+{#                    /* Arrow start */#}
+{#                    svg.append("defs").selectAll("marker")#}
+{#                        .data(["suit", "licensing", "resolved"])#}
+{#                        .enter().append("marker")#}
+{#                        .attr("id", function (d) {#}
+{#                            return d;#}
+{#                        })#}
+{#                        .attr("viewBox", "0 -5 10 10")#}
+{#                        .attr("refX", 25)#}
+{#                        .attr("refY", 0)#}
+{#                        .attr("markerWidth", 4)#}
+{#                        .attr("markerHeight", 4)#}
+{#                        .attr("orient", "auto")#}
+{#                        .append("path")#}
+{#                        .attr("d", "M0,-5L10,0L0,5 L10,0 L0, -5")#}
+{#                        .style("stroke", "#4679BD")#}
+{#                        .style("opacity", "0.4");#}
+{#                    /* Arrow end */#}
+{##}
+{#                    var link = svg.append("g")#}
+{#                        .attr("class", "links")#}
+{#                        .selectAll("line")#}
+{#                        .data(jdata.links)#}
+{#                        .enter().append("line")#}
+{#                        .style("stroke-width", function (d) {#}
+{#                            return Math.sqrt(2);#}
+{#                        })#}
+{#                        .style("marker-end", "url(#suit)");#}
+{#                    /* Arrow */#}
+{##}
+{#                    var node = svg.append("g")#}
+{#                        .attr("class", "nodes")#}
+{#                        .selectAll("circle")#}
+{#                        .data(jdata.nodes)#}
+{#                        .enter().append("circle")#}
+{#                        .attr("r", 7)#}
+{#                        .attr("fill", function (d) {#}
+{#                            return color(d.group);#}
+{#                        })#}
+{##}
+{#                        .call(d3.drag()#}
+{#                            .on("start", dragstarted)#}
+{#                            .on("drag", dragged)#}
+{#                            .on("end", dragended))#}
+{#                        .on('dblclick', connectedNodes)#}
+{#                        .on('click', showProperty);#}
+{##}
+{##}
+{#                    node.append("title")#}
+{#                        .text(function (d) {#}
+{#                            return d.id#}
+{#                        })#}
+{#                        .attr("name", function (d) {#}
+{#                            return d.group#}
+{#                        });#}
+{##}
+{#                    simulation#}
+{#                        .nodes(jdata.nodes)#}
+{#                        .on("tick", ticked);#}
+{##}
+{##}
+{#                    simulation.force("link")#}
+{#                        .links(jdata.links);#}
+{##}
+{##}
+{#                    function ticked() {#}
+{#                        link#}
+{#                            .attr("x1", function (d) {#}
+{#                                return d.source.x;#}
+{#                            })#}
+{#                            .attr("y1", function (d) {#}
+{#                                return d.source.y;#}
+{#                            })#}
+{#                            .attr("x2", function (d) {#}
+{#                                return d.target.x;#}
+{#                            })#}
+{#                            .attr("y2", function (d) {#}
+{#                                return d.target.y;#}
+{#                            });#}
+{##}
+{#                        node#}
+{#                            .attr("cx", function (d) {#}
+{#                                return d.x;#}
+{#                            })#}
+{#                            .attr("cy", function (d) {#}
+{#                                return d.y;#}
+{#                            });#}
+{#                    }#}
+{##}
+{#                    function dragstarted(d) {#}
+{#                        if (!d3.event.active) simulation.alphaTarget(0.3).restart();#}
+{#                        d.fx = d.x;#}
+{#                        d.fy = d.y;#}
+{#                    }#}
+{##}
+{#                    function dragged(d) {#}
+{#                        d.fx = d3.event.x;#}
+{#                        d.fy = d3.event.y;#}
+{#                    }#}
+{##}
+{#                    function dragended(d) {#}
+{#                        if (!d3.event.active) simulation.alphaTarget(0);#}
+{#                        d.fx = null;#}
+{#                        d.fy = null;#}
+{#                    }#}
+{##}
+{##}
+{#                    var toggle = 0;#}
+{#                    //Toggle stores whether the highlighting is on#}
+                    {#                    var toggle = 0;#}
+{#                    //Create an array logging what is connected to what#}
+{#                    var linkedByIndex = {};#}
+{#                    for (i = 0; i < jdata.nodes.length; i++) {#}
+{#                        linkedByIndex[i + "," + i] = 1;#}
+{#                    }#}
+{##}
+{#                    jdata.links.forEach(function (d) {#}
+{#                        linkedByIndex[d.source.index + "," + d.target.index] = 1;#}
+{#                    });#}
+{##}
+{#                    //This function looks up whether a pair are neighbours#}
+{#                    function neighboring(a, b) {#}
+{#                        return linkedByIndex[a.index + "," + b.index];#}
+{#                    }#}
+{##}
+{#                    function connectedNodes() {#}
+{##}
+{#                        if (toggle === 0) {#}
+{#                            //Reduce the opacity of all but the neighbouring nodes#}
+{#                            d = d3.select(this).node().__data__;#}
+{#                            node.style("opacity", function (o) {#}
+{#                                return neighboring(d, o) | neighboring(o, d) ? 1 : 0.1;#}
+{#                            });#}
+{#                            link.style("opacity", function (o) {#}
+{#                                return d.index === o.source.index | d.index === o.target.index ? 1 : 0.1;#}
+{#                            });#}
+{#                            //Reduce the op#}
+{#                            toggle = 1;#}
+{#                        } else {#}
+{#                            //Put them back to opacity=1#}
+{#                            node.style("opacity", 1);#}
+{#                            link.style("opacity", 1);#}
+{#                            toggle = 0;#}
+{#                        }#}
+{#                        return true#}
+{#                    }#}
+{##}
+{##}
+{#                    searchNode(jdata, svg);#}
+{#                    /* Search resources in topology */#}
+{##}
+{#                    switchMovement(simulation);#}
+{##}
+{#                }#}
+
+
+
+                /* Show property and values for the circle pointed instantly */
+
+
+
+            </script>
+
+        </section>
+    </section>
+
+
+
+
+
+{% endblock %}

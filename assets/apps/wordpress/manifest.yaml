@@ -1,0 +1,119 @@
+image: {{ app_detail_basic_image }}:{{ app_detail_basic_version }} #fixed
+
+imagePullPolicy: {{ app_detail_basic_imagepullpolicy }} # select
+
+imagePullSecrets: {{ app_detail_basic_imagepullsecrets }} #select
+
+replicas: {{ app_detail_basic_replicas }} #input
+
+wordpressUsername: {{ app_detail_account_app_login }} #input
+
+wordpressPassword: "{{ app_detail_account_app_password }}" #input
+{% if app_detail_email is defined %}
+wordpressEmail: {{ app_detail_email }} #input
+{% else %}
+wordpressEmail: {{ app_email }}
+{% endif %}
+wordpressFirstName: {{ app_firstname }} #input
+
+wordpressLastName: {{ app_lastname }} #input
+{% if app_detail_blog_name is defined %}
+wordpressBlogName: {{ app_detail_blog_name }} #input
+{% else %}
+wordpressBlogName: {{ app_blog_name }}
+{% endif %}
+
+{% if not app_detail_allowEmptyPassword %}
+allowEmptyPassword: False #boolean
+{% else %}
+allowEmptyPassword: True #boolean
+{% endif %}
+
+mariadb:
+  ## MariaDB admin password
+  ## ref: https://github.com/bitnami/bitnami-docker-mariadb/blob/master/README.md#setting-the-root-password-on-first-run
+  ##
+  mariadbRootPassword: "{{ app_detail_account_db_root_pwd }}" #input
+
+  ## Create a database
+  ## ref: https://github.com/bitnami/bitnami-docker-mariadb/blob/master/README.md#creating-a-database-on-first-run
+  ##
+  mariadbDatabase: "{{ app_detail_account_db_name }}" #input
+
+  ## Create a database user
+  ## ref: https://github.com/bitnami/bitnami-docker-mariadb/blob/master/README.md#creating-a-database-user-on-first-run
+  ##
+  mariadbUser: "{{ app_detail_account_db_username }}" #input
+
+  ## Password for mariadbUser
+  ## ref: https://github.com/bitnami/bitnami-docker-mariadb/blob/master/README.md#creating-a-database-user-on-first-run
+  ##
+  mariadbPassword: "{{ app_detail_account_db_password }}" #input
+
+  ## Enable persistence using Persistent Volume Claims
+  ## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
+  ##
+  persistence:
+{% if not app_detail_db_persist_enable %}
+    enabled: False # boolean
+{% else %}
+    enabled: True # boolean
+{% endif %}
+    ## If defined, volume.beta.kubernetes.io/storage-class: <storageClass>
+    ## Default: volume.alpha.kubernetes.io/storage-class: default
+    ##
+    storageClass: {{ app_detail_db_sc_name }} #select
+    accessMode: {{ app_detail_db_access_mode }} #seect
+    size: {{ app_detail_db_capacity }}Gi #input
+
+serviceType: {{ app_detail_basic_service_type }} #select
+
+healthcheckHttps: {{ app_detail_healthcheck }} # boolean
+
+ingress:
+{% if not app_detail_ingress_enable %}
+  enabled: False # boolean
+{% else %}
+  enabled: True # boolean
+{% endif %}
+  hostname: {{ app_detail_ingress_vhost }} #input}
+
+    ## Ingress annotations
+    ##
+  annotations:
+    {% for item in ingress_annotations -%} #input
+    {{ item }} # key:value
+    {%- endfor %} 
+#      kubernetes.io/ingress.class: nginx
+#      ingress.kubernetes.io/ssl-redirect: "false"
+#      ingress.kubernetes.io/proxy-body-size: 500m
+    ## Ingress TLS configuration
+    ## Secrets must be manually created in the namespace
+    ##
+  tls:
+    - secretName: {{ app_detail_ingress_secret }} #select
+      hosts:
+        - {{ app_detail_ingress_vhost }} #input
+
+persistence:
+{% if not app_detail_app_persist_enable %}
+  enabled: False # boolean
+{% else %}
+  enabled: True # boolean
+{% endif %}
+  ## If defined, volume.beta.kubernetes.io/storage-class: <storageClass>
+  ## Default: volume.alpha.kubernetes.io/storage-class: default
+  ##
+  storageClass: {{ app_detail_app_sc_name }} #select
+  accessMode: {{ app_detail_app_access_mode }} #select
+  size: {{ app_detail_app_capacity }}Gi #input
+
+resources:
+  requests:
+    memory: {{ app_detail_resource_ram_request }}Mi #input
+    cpu: {{ app_detail_resource_cpu_request }}m #input
+{% if app_detail_resource_enable %}
+  limits:
+    memory: {{ app_detail_resource_ram_limit }}Mi
+    cpu: {{ app_detail_resource_cpu_limit }}m
+{% endif %}

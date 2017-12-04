@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+{% block content %}
+    <section id="main-content">
+        <section class="wrapper">
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <h3 class="page-header"><i class="fa fa-table"></i> Deployment </h3>
+                    <ol class="breadcrumb">
+                        <li><i class="fa fa-home"></i><a href="#">Home</a></li>
+                        <li><i class="fa fa-table"></i><a href="/nodes/status/"></a>Status</li>
+                        <li><i class="fa fa-th-list"></i>deployment</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <ul class="nav nav-pills nav-justified">
+                        <li role="presentation" class="home active"><a href="#">Home</a></li>
+                        <li role="presentation" class="config"><a href="#">Configuration</a></li>
+                        <li role="presentation" class="test1"><a href="#">Test</a></li>
+                    </ul>
+                </div>
+
+            </div>
+            <div class="row" style="position:relative;">
+                <div class="col-md-12 " id="home">
+
+
+                    <p><i class="fa fa4x">Availabled Deployment</i></p>
+
+
+                    <form id="all_deployment" class="form-group ">
+
+                        <select class="selectpicker" name="select_deploy" id="select_deploy">
+
+                            {% for row in data %}
+                                <option>{{ row.metadata.name }}</option>
+
+                            {% endfor %}
+
+
+                        </select>
+
+                    </form>
+
+                    <div id="json_box" class="col-md-offset-2 col-md-8" style="position: absolute; top: 30px; left: -20px;width: 500px; height: 600px;">
+                    </div>
+
+                </div>
+
+
+                <div class="col-md-12 hide" id="config">
+                    <p>Hello Config</p>
+
+
+                </div>
+                <div class="col-md-12 hide" id="test1">
+                    <p>Hello Test</p>
+
+
+                </div>
+            </div>
+
+        </section>
+    </section>
+
+
+
+    <script>
+
+        $(function () {
+            {#            access_deploy_api()#}
+        });
+
+
+        $("li[role='presentation']").click(function () {
+            $(this).addClass('active').siblings().removeClass('active');
+            var a1 = $(this).attr('class');
+            if (a1 === 'home active') {
+                $('#home').removeClass('hide').siblings().addClass('hide')
+            }
+            if (a1 === 'config active') {
+                $('#config').removeClass('hide').siblings().addClass('hide')
+            }
+            if (a1 === 'test1 active') {
+                $('#test1').removeClass('hide').siblings().addClass('hide')
+            }
+        });
+
+        function access_deploy_api(dname) {
+            $.ajax({
+                url: '/deployment/find_one/',
+                type: 'post',
+                data: {'name': dname},
+                success: function (e) {
+                    var ret = JSON.parse(e);
+
+                    json_render(ret.data)
+                }
+
+            })
+        }
+
+        $('#select_deploy').on('change', function () {
+            var deploy_name = ($(this).val());
+            access_deploy_api(deploy_name)
+        });
+
+
+        function json_render(jdata) {
+            $('#json_box').empty();
+            var container = document.getElementById('json_box');
+            var options = {};
+            var editor = new JSONEditor(container, options);
+            editor.set(jdata);
+
+            var json = editor.get();
+        }
+
+    </script>
+
+
+
+{% endblock %}

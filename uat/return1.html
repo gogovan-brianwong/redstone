@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../static/js/jquery-1.12.4.min.js"></script>
+</head>
+
+<body>
+
+<div>
+    <input type="checkbox" id="c1">
+    <input type="checkbox" id="c2" checked="checked">
+</div>
+<script>
+    function t1() {
+        var a1 = [11, 22, 33, 44, 55]
+        $.each(a1, function (k, v) {
+
+            if (k === 2) {
+                console.log(k, v);
+                return false
+            }
+            console.log(v);
+
+        });
+        console.log('end')
+    }
+
+
+</script>
+</body>
+</html>

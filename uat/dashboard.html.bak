@@ -1,0 +1,690 @@
+{% extends "base.html" %}
+{% block content %}
+    <!--sidebar start-->
+    <style>
+
+
+        .hide_uid {
+
+            display: none;
+
+        }
+
+        .overlayer {
+            position: fixed;
+            background-color: #020202;
+            margin-top: 0;
+            margin-left: 0;
+            margin-right: 0;
+            margin-bottom: 0;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 9990;
+            opacity: 50;
+        }
+
+        .selected_host {
+
+            background-color: #e4ee21;
+
+        }
+
+        .badge-danger {
+            display: inline-block;
+            min-width: 10px;
+            padding: 3px 7px;
+            font-size: 12px;
+            font-weight: bold;
+            line-height: 1;
+            color: #ffffff;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: baseline;
+            background-color: #7b2146;
+            border-radius: 25px
+        }
+
+        .badge-info {
+            display: inline-block;
+            min-width: 10px;
+            padding: 3px 7px;
+            font-size: 12px;
+            font-weight: bold;
+            line-height: 1;
+            color: #ffffff;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: baseline;
+            background-color: #2b5da3;
+            border-radius: 25px
+        }
+
+        .well-1 {
+            min-height: 20px;
+            padding: 10px;
+            margin-bottom: 15px;
+            background-color: #f5f3e8;
+            border: 1px solid #e3dec8;
+            border-radius: 16px;
+            -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+        }
+
+        .well-2 {
+            min-height: 20px;
+            padding: 10px;
+            margin-bottom: 15px;
+            background-color: #dbf5e7;
+            border: 1px solid #d4e3dd;
+            border-radius: 16px;
+            -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+        }
+
+        .well-3 {
+            min-height: 20px;
+            padding: 19px;
+            margin-bottom: 15px;
+            background-color: #dae7f5;
+            border: 1px solid #d5d9e3;
+            border-radius: 16px;
+            -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+        }
+
+        .well-resource-block {
+            min-height: 20px;
+            padding: 15px;
+            margin-top: 15px;
+            margin-bottom: 15px;
+            background-color: #f5dae2;
+            border: 1px solid #e3dada;
+            border-radius: 16px;
+            -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+        }
+
+        .well-toprestart-block {
+            min-height: 20px;
+            padding: 15px;
+            margin-top: 15px;
+            margin-bottom: 15px;
+            background-color: #e6e2f5;
+            border: 1px solid #e3dada;
+            border-radius: 16px;
+            -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+        }
+
+        .alert-danger {
+            color: #eaeeec;
+            background-color: #f43348;
+            border-color: #ebccd1;
+        }
+    </style>
+    <!--commonmain content start-->
+    <section id="main-content">
+        <section class="wrapper">
+            <!-- Alert box start -->
+            <div class="row">
+                <div style="width: 64% ;height: auto">
+                    <div id="alertbox" class="alert alert-danger alert-dismissible hide_uid "
+                         style="position: relative; z-index: 200" role="alert">
+                        <button type="button" class="close"
+                                style="position: absolute; z-index: 201; right: 20px; top: 10px;" data-dismiss="alert"
+                                data-toggle="collapse" data-target="#alertbox"
+                                aria-label="Close"><span
+                                aria-hidden="true">&times;</span>
+                        </button>
+                        <span id="alertmsg"></span>
+
+                    </div>
+                </div>
+            </div>
+            <!-- Alert box end -->
+            <!-- content page header start-->
+            <div class="row">
+                <div class="col-lg-12">
+                    <h3 class="page-header"><i class="fa fa-dashboard"></i> Dashboard </h3>
+
+                </div>
+            </div>
+            <!-- content page header end-->
+
+
+            <div class="row" style="width: 65%; height: auto">
+                {#                <div id="cpu_chart_left" class="col-md-1" style="position: absolute; top: 35%; left: 10%; z-index: 110">#}
+                {#                    <a href="#"><i class="fa fa-caret-left fa-2x"></i></a></div>#}
+                <div class="well-2" style="position: relative; padding-top: 20px; padding-bottom: 5px;">
+                    <div id='cpu_metrics' class="col-md-10 slider4">
+
+                        {% for row in metrics_data.cpu_data %}
+                            <div id="" class="col-md-2 slide"
+                                 style="position:absolute; height: 200px; width: 300px; z-index: 1">
+
+                                <div id=""
+                                     style="position: absolute;  top: 30%; left: 46%; font-size: x-large;z-index: 101"></div>
+                                <div id="" style=" position: absolute; left: 0;">
+                                    <canvas id="" style="position: absolute;  z-index: 100"></canvas>
+                                </div>
+                                <div style="position: absolute; top: 20%; left: 40%; font-size: smaller; z-index: 104">
+                                    {{ row.hostname }}
+                                </div>
+
+                                <!-- display text of value -->
+                                <div style="position: absolute; top: 50%; left: 38%; font-size: x-small; z-index: 105">
+                                    {{ row.cpu_usage }}m / {{ row.cpu_allocatable }}m
+                                </div>
+                                <div style="position: absolute; top: 35%; left: 58%; font-size: x-small; z-index: 102">
+                                    %
+                                </div>
+                                <div style="position: absolute; top: 75%; left: 35%; font-size: smaller; z-index: 106">{{ row.hostip }}</div>
+                                <div style="position: absolute; top: 85%; left: 42%; font-size: smaller; z-index: 103">{{ row.metric_type }}
+                                    <div id="" class="hide_uid">{{ forloop.counter }}</div>
+                                </div>
+                            </div>
+
+                        {% endfor %}
+
+
+                    </div>
+                    <!-- pull downl menu for CPU start -->
+                    <div id="hostlist_cpu" class=" col-md-2"
+                         style="position: absolute; top: 60px; right: 10px; z-index: 122">
+                        <form class="form-group-md " action="#">
+                            <label class="control-label" for="cpu_hostselect">Hosts</label>
+                            <select id='cpu_hostselect' class="form-control">
+                                {% for row in hosts_list %}
+                                    <option selected="" value="">{{ row.hostname }}</option>
+                                {% endfor %}
+                            </select>
+
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+            <!-- Reource List Block start -->
+            {% include 'dashboard/resource_list_block.html' %}
+
+            <!-- Reource List Block end -->
+            {% include 'dashboard/restart_block.html' %}
+
+
+            <!-- memory section -->
+
+            <div class="row" style="width: 65%; height: auto">
+                <div class="well-1" style="position: relative; padding-top: 20px; padding-bottom: 5px;">
+                    <div id='mem_metrics' class="col-md-10 slider4">
+                        {% for row in metrics_data.memory_data %}
+                            <div class="col-md-2 slider" style="height: 200px; width: 300px; z-index: 1">
+                                <div id=""
+                                     style="position: absolute;  top: 30%; left: 45%; font-size: x-large;z-index: 101"></div>
+                                <div id="" style=" position: absolute; left: 0;">
+                                    <canvas id="" style="position: absolute;  z-index: 100"></canvas>
+                                </div>
+                                <div style="position: absolute; top: 15%; left: 40%; font-size: smaller; z-index: 104">
+                                    {{ row.hostname }}
+                                </div>
+                                <div style="position: absolute; top: 55%; left: 38%; font-size: x-small; z-index: 105">
+                                    {{ row.mem_usage }}G / {{ row.mem_allocatable }}G
+                                </div>
+                                <!-- display text of value -->
+                                <div style="position: absolute; top: 35%; left: 58%; font-size: small; z-index: 102">
+                                    %
+                                </div>
+
+                                <div style="position: absolute; top: 75%; left: 35%; font-size: smaller; z-index: 103">{{ row.hostip }}</div>
+                                <div style="position: absolute; top: 85%; left: 35%; font-size: smaller; z-index: 103">{{ row.metric_type }}
+                                    <div id="mem_metric_uid" class="hide_uid">{{ forloop.counter }}</div>
+                                </div>
+                            </div>
+
+                        {% endfor %}
+
+
+                    </div>
+
+                    <!-- pull downl menu for MEM start -->
+                    <div id="hostlist_mem" class=" col-md-2"
+                         style="position: absolute; top: 60px; right: 10px; z-index: 121">
+                        <form class="form-group-md " action="#">
+                            <label class="control-label" for="mem_hostselect">Hosts</label>
+                            <select id='mem_hostselect' class="form-control">
+                                {% for row in hosts_list %}
+                                    <option selected="" value="">{{ row.hostname }}</option>
+                                {% endfor %}
+                            </select>
+
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- filesystem metrics chart start -->
+
+            <div class="row" style="width: 65%; height: auto">
+                <div class="well-3" style="position: relative; padding-top: 20px; padding-bottom: 5px;">
+                    <div id='fs_metrics' class="col-md-10 slider4">
+                        {% for row in metrics_data.fs_data %}
+                            <div class="col-md-2 slider" style="height: 200px; width: 300px; z-index: 1">
+                                <div id=""
+                                     style="position: absolute;  top: 30%; left: 45%; font-size: x-large;z-index: 101"></div>
+                                <div id="" style=" position: absolute; left: 0;">
+                                    <canvas id="" style="position: absolute;  z-index: 100"></canvas>
+                                </div>
+                                <div style="position: absolute; top: 15%; left: 40%; font-size: smaller; z-index: 104">
+                                    {{ row.hostname }}
+                                </div>
+                                <div style="position: absolute; top: 55%; left: 40%; font-size: x-small; z-index: 105">
+                                    {{ row.disk_used }}G/{{ row.disk_total }}G
+                                </div>
+                                <!-- display text of value -->
+                                <div style="position: absolute; top: 35%; left: 58%; font-size: small; z-index: 102">
+                                    %
+                                </div>
+
+                                <div style="position: absolute; top: 75%; left: 35%; font-size: smaller; z-index: 103">{{ row.hostip }}</div>
+                                <div style="position: absolute; top: 85%; left: 35%; font-size: smaller; z-index: 103">{{ row.metric_type }}
+                                    <div id="fs_metric_uid" class="hide_uid">{{ forloop.counter }}</div>
+                                </div>
+                            </div>
+
+                        {% endfor %}
+
+
+                    </div>
+
+
+                    <!-- pull downl menu for Filesystem start -->
+                    <div id="hostlist_fs" class=" col-md-2"
+                         style="position: absolute; top: 60px; right: 10px; z-index: 121">
+                        <form class="form-group-sm " action="#">
+                            <label class="control-label" for="fs_hostselect">Hosts</label>
+                            <select id='fs_hostselect' class="form-control">
+                                {% for row in hosts_list %}
+                                    <option selected="" value="">{{ row.hostname }}</option>
+                                {% endfor %}
+                            </select>
+
+                        </form>
+
+                    </div>
+
+                </div>
+            </div>
+            <div id="overlayer" class="overlayer hide_uid"></div> <!-- Overlay page -->
+
+
+            <script>
+
+
+                $(document).ready(function () {
+                    {#                    $.support.transition = true;#}
+{#                    PageLoading();#}
+
+                    render_tpl();
+                    pushalert();
+                });
+
+
+                function PageLoading() {
+
+                    $('#overlayer').removeClass('hide_uid');
+                    $.LoadingOverlay('show', {
+                        imagePostion: "center center",
+                        size: "50%",
+                        fade: true,
+                        zIndex: 9999
+                    });
+                }
+
+                function render_tpl() {
+
+                    $.ajax({
+                        url: '/common/dashboard/',
+                        async: true,
+                        type: 'get',
+                        success: function () {
+                            gen_cpu_id_tag();
+                            gen_mem_id_tag();
+                            gen_disk_id_tag();
+                            ajax_getResourceList();
+                        }
+                    });
+
+                }
+
+
+                function gen_cpu_id_tag() {
+                    var cpu_tag_list = [];
+                    $.ajax({
+                        url: '/common/dashboard/cpu_metrics/',
+                        type: 'get',
+                        cache: true,
+                        success: function (data) {
+                            var ret = JSON.parse(data);
+                            $.each(ret.cpu_data, function (idx, e) {
+                                cpu_tag_list.push({
+                                    host: e.hostname,
+                                    tag_id: {'gid': e.gauge_id, 'cid': e.canvas_id},
+                                    value: {
+                                        'metric': e.cpu_percent,
+                                        'maxvalue': 100,
+                                        'host_metric_type': e.host_metric_type
+                                    }
+                                });
+                            });
+                            amend_tag_id('#cpu_metrics', cpu_tag_list);
+                        }
+
+                    });
+
+                }
+                function gen_mem_id_tag() {
+                    var mem_tag_list = [];
+                    $.ajax({
+                        url: '/common/dashboard/mem_metrics/',
+                        type: 'get',
+                        cache: true,
+                        success: function (data) {
+                            var ret = JSON.parse(data);
+                            $.each(ret.memory_data, function (idx, e) {
+                                mem_tag_list.push({
+                                    host: e.hostname,
+                                    tag_id: {'gid': e.gauge_id, 'cid': e.canvas_id},
+                                    value: {
+                                        'metric': e.mem_percent,
+                                        'maxvalue': 100,
+                                        'host_metric_type': e.host_metric_type
+                                    }
+                                });
+                            });
+                            amend_tag_id('#mem_metrics', mem_tag_list)
+                        }
+
+                    });
+
+                }
+
+
+                function gen_disk_id_tag() {
+                    var disk_tag_list = [];
+                    $.ajax({
+                        url: '/common/dashboard/fs_metrics/',
+                        type: 'get',
+                        cache: true,
+                        success: function (data) {
+                            var ret = JSON.parse(data);
+                            $.each(ret.fs_data, function (idx, e) {
+                                disk_tag_list.push({
+                                    host: e.hostname,
+                                    tag_id: {'gid': e.gauge_id, 'cid': e.canvas_id},
+                                    value: {
+                                        'metric': e.disk_percent,
+                                        'maxvalue': 100,
+                                        'host_metric_type': e.host_metric_type
+                                    }
+                                });
+                            });
+                            amend_tag_id('#fs_metrics', disk_tag_list)
+                        }
+
+                    });
+
+                }
+
+
+                function amend_tag_id(div_id, tlist) {
+                    var i = 0;
+                    var idx = 1;
+                    $(div_id).children().each(function () {
+                        $(this).attr('id', tlist[i].value.host_metric_type + '_' + idx);
+                        $(this).children().first().attr('id', tlist[i].tag_id.gid);
+                        $(this).children().first().next().children().attr('id', tlist[i].tag_id.cid);
+                        $(this).children().last().attr('id', 'uid_' + idx);
+                        donutRender(tlist[i].tag_id.cid, tlist[i].tag_id.gid, tlist[i].value.maxvalue, tlist[i].value.metric);
+                        i += 1;
+                        idx += 1;
+                    });
+                    slider_chart();
+                    $('#overlayer').addClass('hide_uid');
+                    $.LoadingOverlay('hide', true);
+
+                    getData_CPU();
+                    getData_MEM();
+
+                }
+
+
+                function ajax_getResourceList() {
+
+                    setInterval(function () {
+                        $.ajax({
+                            url: '/common/dashboard/resources/',
+                            type: 'get',
+                            success: function (data) {
+                                var ret = JSON.parse(data);
+                                var rlist = ret.resource_list;
+                                var idx = 0;
+
+                                $('#resource_list_tbody').children().each(function () {
+
+                                    $(this).children().last().children().text(rlist[idx].resource_num);
+                                    idx += 1;
+
+                                });
+                            }
+                        });
+                    }, 30000);
+                }
+
+
+                function slider_chart() {
+                    $('.slider4').bxSlider({
+                        infiniteLoop: false,
+                        slideWidth: 300,
+                        minSlides: 1,
+                        maxSlides: 3,
+                        moveSlides: 1,
+                        slideMargin: 1,
+                        controls: false,
+                        pager: false,
+                        hideControlOnEnd: true,
+                        responsive: true
+
+                        {#                        nextSelector: '#cpu_chart_right',#}
+                        {#                        prevSelector: '#cpu_chart_left'#}
+
+                    });
+
+                }
+
+
+                function getData_CPU() {
+                    setInterval(function () {
+                        $.ajax({
+                            url: '/common/dashboard/cpu_metrics/',
+                            type: 'get',
+                            success: function (data) {
+                                var ret = JSON.parse(data);
+
+                                $.each(ret.cpu_data, function (idx, e) {
+                                    idx += 1;
+                                    $('#gauge_' + idx).text(e.cpu_percent);
+                                    $('#gauge_' + idx).next().next().text(e.hostname);
+                                    $('#gauge_' + idx).next().next().next().text(e.cpu_usage + 'm' + '/' + e.cpu_allocatable + 'm');
+                                    donutRender('canvas_' + idx, 'gauge_' + idx, 100, e.cpu_percent, '#420770');
+
+                                });
+
+                            }
+                        });
+
+                    }, 30000);
+                }
+
+
+                function getData_MEM() {
+                    setInterval(function () {
+                        $.ajax({
+                            url: '/common/dashboard/mem_metrics/',
+                            type: 'get',
+                            success: function (data) {
+                                var ret = JSON.parse(data);
+                                $.each(ret.memory_data, function (idx, e) {
+
+                                    idx += 1;
+                                    $('#mem_gauge_' + idx).text(e.mem_percent);
+                                    $('#mem_gauge_' + idx).next().next().text(e.hostname);
+                                    $('#mem_gauge_' + idx).next().next().next().text(e.mem_usage + 'G' + '/' + e.mem_allocatable + 'G');
+                                    donutRender('mem_canvas_' + idx, 'mem_gauge_' + idx, 100, e.mem_percent, '#993B24');
+
+                                })
+                            }
+                        });
+                    }, 30000);
+
+                }
+
+
+                function donutRender(canvasID, gaugevalueID, maxValue, returnedValue) {
+                    var opts = {
+                        angle: 0.35, // The span of the gauge arc
+                        lineWidth: 0.1, // The line thickness
+                        radiusScale: 1, // Relative radius
+                        pointer: {
+                            length: 0.6, // // Relative to gauge radius
+                            strokeWidth: 0.035, // The thickness
+                            color: '#000000' // Fill color
+                        },
+                        limitMax: false,     // If false, max value increases automatically if value > maxValue
+                        limitMin: false,     // If true, the min value of the gauge will be fixed
+                        colorStart: '#7f0b44',   // Colors
+                        colorStop: '#7c2443',    // just experiment with them
+                        strokeColor: '#cccccc',  // to see which ones work best for you
+                        generateGradient: false,
+                        highDpiSupport: true     // High resolution support
+                    };
+
+                    var target = document.getElementById(canvasID);// your canvas element
+                    var gauge = new Donut(target).setOptions(opts); // create sexy gauge!
+                    gauge.setTextField(document.getElementById(gaugevalueID));
+                    gauge.maxValue = maxValue; // set max gauge value
+                    gauge.setMinValue(0);  // Prefer setter over gauge.minValue = 0
+                    gauge.animationSpeed = 1; // set animation speed (32 is default value)
+                    gauge.set(returnedValue)
+                }
+
+                <!-- select pull down script start -->
+
+                $('#cpu_hostselect').on('change', function () {
+                    var a1 = $('#cpu_hostselect option:selected').text();
+                    $(this).parents().find('div#cpu_metrics').children().each(function () {
+                        var b1 = $(this).children().first().next().next().text().trim();
+                        if (b1 === a1) {
+                            $(this).prependTo('#cpu_metrics');
+
+                            var $effect = $(this).children().last().prev().addClass('selected_host');
+                            setTimeout(function () {
+                                $effect.removeClass('selected_host');
+                            }, 3000);
+
+
+                        }
+
+                    })
+                });
+
+                $('#mem_hostselect').on('change', function () {
+                    var a1 = $('#mem_hostselect option:selected').text();
+                    $(this).parents().find('div#mem_metrics').children().each(function () {
+                        var b1 = $(this).children().first().next().next().text().trim();
+                        if (b1 === a1) {
+                            $(this).prependTo('#mem_metrics');
+
+                            var $effect = $(this).children().last().prev().addClass('selected_host');
+                            setTimeout(function () {
+                                $effect.removeClass('selected_host');
+                            }, 3000);
+
+
+                        }
+
+                    })
+
+                });
+
+                $('#fs_hostselect').on('change', function () {
+                    var a1 = $('#fs_hostselect option:selected').text();
+                    $(this).parents().find('div#fs_metrics').children().each(function () {
+                        var b1 = $(this).children().first().next().next().text().trim();
+                        if (b1 === a1) {
+                            $(this).prependTo('#fs_metrics');
+
+                            var $effect = $(this).children().last().prev().addClass('selected_host');
+                            setTimeout(function () {
+                                $effect.removeClass('selected_host');
+                            }, 3000);
+
+
+                        }
+
+                    })
+
+                });
+
+
+                <!-- select pull down script end -->
+
+                function pushalert() {
+
+                    var source = new EventSource("/common/dashboard/alertbox/");
+                    source.addEventListener('message', function (e) {
+
+                        msg_array = e.data.split('&'); // split returned string with & and reassemble a list/array
+
+                        retrieve_ttl_msg(msg_array); //send array in Ajax request to save msg to db and returned total messages in db.
+
+                        });
+
+                    }
+
+
+                function amend_html(value, counter) {
+
+                    $('#alertbox').empty();
+
+                    var html = "<p>Pod " + value[0] + " crashed, </p>";      // construct html code to display with returned value.
+                    html += "<p>Ready status is now " + value[1] + "</p>";
+                    html += "<p>Reason: " + value[2] + "</p>";
+                    var $alert = $('#alertbox').append(html).removeClass('hide_uid'); // append html to specific div, meanwhile display alert message block.
+                    $('#alert_badge').text(counter);   // change badge counter.
+
+                    setTimeout(function () {     // Timer to delay showing block.
+                        $alert.addClass('hide_uid')
+                    }, 5000)
+
+                }
+
+                function retrieve_ttl_msg(msg_list) {
+                    {#                    var reg = /\{[^\}]+\}/g;#}
+                    $.ajax({
+                        url: '/common/dashboard/get_ttl_msg/',
+                        type: 'post',
+                        data: {'podname': msg_list[0], 'podstatus': msg_list[1], 'poderror': msg_list[2]}, // send to backend in different elements.
+                        success: function (e) {
+                            ret = JSON.parse(e);
+                            amend_html(msg_list, ret.current_num)  //call with assembled array and returned total messages to amend html page.
+                        }
+
+                    });
+
+                }
+
+            </script>
+
+
+        </section>
+    </section>
+
+{% endblock %}

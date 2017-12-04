@@ -1,0 +1,823 @@
+{% load custom_tags %}
+<style>
+
+    .well-banner-optional {
+        background-color: white;
+        margin-top: 30px;
+        border: 1px solid #dedede;
+        border-left: 4px solid #9e540b;
+        padding: 30px;
+        border-radius: 5px
+
+    }
+
+    .well-banner-required {
+        background-color: white;
+        margin-top: 30px;
+        border: 1px solid #dedede;
+        border-left: 4px solid #32a61e;
+        padding: 30px;
+        border-radius: 5px
+
+    }
+
+    label {
+        color: #0c0c0c;
+        font-size: 13px;
+
+    }
+
+</style>
+<div class="row ">
+    <div class="col-lg-12">
+
+        <section>
+            {% for row in data %}
+
+
+                <div class="row" style="position: relative">
+                <span style="position: absolute; top: 10px; left: 580px;">
+                    <a href="/application/index/" style="position: absolute; left: -530px;"><i
+                            class="fa fa-2x fa-arrow-circle-left" style="color: #777978"></i></a>
+
+                </span>
+
+
+                    <div class="col-md-offset-4 col-md-6" style="position:relative;margin-bottom: 10px; left: -50px; background-color: white; border: 1px solid #c1bfc4;
+                            padding: 10px; padding-left: 0; border-radius: 5px; "
+                         data-appname="{{ row.appname }}" data-appid="{{ row.id }}" id="app_detail_topnav">
+
+
+                        <ul class="nav nav-pills" role="tablist" style="margin-left: 25px;">
+
+                            <a href="#"><i
+                                    class="fa fa-3x fa-arrow-circle-o-right pull-left" style="color: darkorange"
+                                    aria-hidden="true"></i></a>
+
+                            <li role="presentation" class="active"><a href="#app_detail_basic_tab"
+                                                                      aria-controls="app_detail_basic_tab"
+                                                                      role="tab"
+                                                                      data-toggle="tab">主配</a>
+                            </li>
+
+                            {% if row.app_deployoption.custom_tab == True %}
+                                <li role="presentation"><a href="#app_detail_custom_tab"
+                                                           aria-controls="app_detail_custom_tab"
+                                                           role="tab"
+                                                           data-toggle="tab">定製</a>
+                                </li>
+                            {% endif %}
+                            {% if row.app_deployoption.account_tab == True %}
+                                <li role="presentation"><a href="#app_detail_account_tab"
+                                                           aria-controls="app_detail_account_tab"
+                                                           role="tab"
+                                                           data-toggle="tab">帳號 </a>
+                                </li>
+                            {% endif %}
+
+                            {% if row.app_deployoption.app_persist_tab == True %}
+                                <li role="presentation"><a href="#app_detail_app_storage_tab"
+                                                           aria-controls="app_detail_app_storage_tab"
+                                                           role="tab"
+                                                           data-toggle="tab">應用存儲</a>
+                                </li>
+                            {% endif %}
+
+
+                            {% if row.app_deployoption.db_persist_tab == True %}
+                                <li role="presentation"><a href="#app_detail_db_storage_tab"
+                                                           aria-controls="app_detail_db_storage_tab"
+                                                           role="tab"
+                                                           data-toggle="tab">數據存儲</a></li>
+                            {% endif %}
+
+                            {% if row.app_deployoption.resources_tab == True %}
+                                <li role="presentation"><a href="#app_detail_resource_tab"
+                                                           aria-controls="app_detail_resource_tab" role="tab"
+                                                           data-toggle="tab">資源配置</a>
+                                </li>
+                            {% endif %}
+
+                            {% if row.app_deployoption.policy_tab == True %}
+                                <li role="presentation"><a href="#app_detail_policy_tab"
+                                                           aria-controls="app_detail_policy_tab" role="tab"
+                                                           data-toggle="tab">Policy</a>
+                                </li>
+                            {% endif %}
+
+                            {% if row.app_deployoption.ingress_tab == True %}
+                                <li role="presentation"><a href="#app_detail_ingress_tab"
+                                                           aria-controls="app_detail_ingress_tab"
+                                                           role="tab"
+                                                           data-toggle="tab">負载均衡</a>
+                                </li>
+                            {% endif %}
+                            <li class="pull-right"
+                                style="border-left: 1px solid lightgrey; margin-top: 3px; margin-right: 10px">
+                                <button href="#" class="btn btn-success" id="app_deploy_btn">Deploy</button>
+                            </li>
+
+                        </ul>
+                        {#                        <span style="position: absolute; right: 10%; top: 5px; vertical-align: middle; padding-left: 30px; border-left: 1px solid #5f649d;">#}
+                        {#                    </span>#}
+
+                    </div>
+                </div>
+
+                <div class="col-md-offset-1 col-md-2" style="margin-right: 75px">
+
+                    <a href="#">
+                        <img width="280" height="200" src="{{ row.thumbnail_path }}"
+                             style="padding-right: 60px;"
+                             alt="Responsive Image">
+                    </a>
+
+                    <div style="width: 250px; height: auto; margin-top: 20px; padding: 8px;">
+
+                        <p class="text-left">{{ row.appdetails }}</p>
+                    </div>
+                </div>  <!-- Thumbnail Image -->
+
+                <div class="tab-content">
+                    <!-- basic Tag start -->
+                    <div role="tabpanel" class="col-md-7 tab-pane active well-banner-required"
+                         id="app_detail_basic_tab">
+                        <form id="app_detail_basic_frm" class="form-horizontal">
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="app_detail_basic_appname">App Name:</label>
+
+                                <span class="col-xs-4">
+                                    <span class="input-group">
+                                        <input class="form-control" type="text" id="app_detail_basic_appname"
+                                               name="app_detail_basic_appname"
+                                               placeholder="App Name">
+                                        <span class="input-group-addon"><i
+                                                class="fa fa-pencil"></i></span>
+
+                                    </span>
+                                </span>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="app_detail_basic_type">Type:</label>
+                                <span class="col-xs-4">
+                                    {% for x in row.all_apptypes.get_queryset %}
+
+                                        <a href="#" class="k8s-badge">{{ x.typename }}</a>
+                                    {% endfor %}
+                                 </span>
+                            </div>
+
+                            <div class="form-group  ">
+
+                                <label class="col-sm-2 control-label" for="app_detail_basic_image">Image:</label>
+                                <span class="col-xs-4">
+                                    <select class="form-control" name="app_detail_basic_image"
+                                            id="app_detail_basic_image">
+                                        {% for y in app_image %}
+                                            <option class="form-control"
+                                                    value="{{ y.image_path }}">{{ y.image_path }}</option>
+                                        {% endfor %}
+                                    </select>
+
+                                </span>
+                            </div>
+
+                            <div class="form-group  ">
+
+                                <label class="col-sm-2 control-label" for="app_detail_basic_imagepullpolicy">Image Pull
+                                    Policy:</label>
+                                <span class="col-xs-4">
+                                    <select class="form-control" name="app_detail_basic_imagepullpolicy"
+                                            id="app_detail_basic_imagepullpolicy">
+                                        {% for item in app_image_pullpolicy %}
+                                            <option class="form-control"
+                                                    value="{{ item }}">{{ item }}</option>
+                                        {% endfor %}
+                                    </select>
+
+                                </span>
+                            </div>
+
+                            <div class="form-group  ">
+
+                                <label class="col-sm-2 control-label" for="app_detail_basic_imagepullsecrets">Image Pull
+                                    Secret:</label>
+                                <span class="col-xs-4">
+                                    <select class="form-control" name="app_detail_basic_imagepullsecrets"
+                                            id="app_detail_basic_imagepullsecrets">
+                                        {% for item in app_imagepullsecrets %}
+                                            <option class="form-control"
+                                                    value="{{ item }}">{{ item }}</option>
+                                        {% endfor %}
+                                    </select>
+
+                                </span>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="app_detail_basic_version">Version:</label>
+                                <span class="col-xs-4">
+                                    <select class="form-control" name="app_detail_basic_version"
+                                            id="app_detail_basic_version">
+                                        {% for x in row.app_repository.app_image.all_appversions.get_queryset %}
+                                            <option class="form-control"
+                                                    value="{{ x.appversion }}">{{ x.appversion }}</option>
+                                        {% endfor %}
+                                    </select>
+
+                                </span>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="app_detail_basic_replicas">Replicas:</label>
+                                <span class="col-xs-4">
+                                    <span class="input-group">
+
+                                        <input type="text" class="form-control" placeholder="Replicas"
+                                               id="app_detail_basic_replicas"
+                                               aria-describedby="basic-addon1" name="app_detail_basic_replicas">
+                                        <span class="input-group-addon"
+                                              id="basic-addon1"><i class="fa fa-pencil"></i></span>
+                                    </span>
+
+
+                                </span>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="app_detail_basic_service_type">Service
+                                    Type:</label>
+                                <span class="col-xs-4">
+                                    <select class="form-control" name="app_detail_basic_service_type"
+                                            id="app_detail_basic_service_type">
+                                        {% for y in service_types %}
+                                            <option class="form-control"
+                                                    value="{{ y }}">{{ y }}</option>
+                                        {% endfor %}
+                                    </select>
+
+                                </span>
+                            </div>
+                        </form>
+                    </div>
+
+                    {#                <div class="form-group form-group-xs ">#}
+                    {#                    <label class="col-sm-2 control-label" for="formGroupInputSmall">Disk Type </label>#}
+                    {#                    <div class="col-xs-4">#}
+                    {#                        <div class="btn-row">#}
+                    {#                            <div class="btn-group" data-toggle="buttons">#}
+                    {#                                <label class="btn btn-default active">#}
+                    {#                                    <input type="radio" name="Fast" id="fast">#}
+                    {#                                    Fast#}
+                    {#                                </label>#}
+                    {##}
+                    {#                                <label class="btn btn-default active">#}
+                    {#                                    <input type="radio" name="Fast" id="fast">#}
+                    {#                                    Default#}
+                    {#                                </label>#}
+                    {##}
+                    {#                                <label class="btn btn-default active">#}
+                    {#                                    <input type="radio" name="Fast" id="fast">#}
+                    {#                                    Slow#}
+                    {#                                </label>#}
+                    {##}
+                    {##}
+                    {#                            </div>#}
+                    {##}
+                    {##}
+                    {#                        </div>#}
+                    {##}
+                    {#                    </div>#}
+                    {#                </div>#}
+
+
+                    <!-- basic Tag end -->
+
+
+                    <!-- custom Tag start -->
+
+                    <div role="tabpanel" class="col-md-7 tab-pane well-banner-required" id="app_detail_custom_tab">
+                        <form id="app_detail_custom_frm" class="form-horizontal">
+
+                            {% customize row.id row.appname %}
+
+                        </form>
+
+                    </div>
+                    <!-- custom Tag end -->
+
+                    <!-- account Tag start -->
+                    <div role="tabpanel" class="col-md-7 tab-pane" id="app_detail_account_tab" style="padding-left: 0">
+
+
+                        <form id="app_detail_account_frm" class="form-horizontal">
+
+                            <div class="form-group" style="position: relative">
+
+                                <label class="col-sm-2 control-label" for="app_detail_allowEmptyPassword">Allow Empty
+                                    DB Password:</label>
+                                <span class="col-xs-4" style="position: absolute; top:15px; margin-left: 30px">
+                                           <span class="material-switch">
+
+                                            <input id="app_detail_allowEmptyPassword"
+                                                   name="app_detail_allowEmptyPassword"
+                                                   type="checkbox" class="control-label"/>
+                                            <label class="label-success" for="app_detail_allowEmptyPassword"></label>
+                                            </span>
+
+                                    </span>
+                            </div>
+
+                            <div id="app_detail_account_block" class="well-banner-optional">
+                                <div class="form-group ">
+                                    <label class="col-sm-2 control-label" for="app_detail_account_db_root_pwd">Root
+                                        Password:</label>
+                                    <span class="col-xs-4">
+
+                                        <span class="input-group">
+                                             <input class="form-control" type="password"
+                                                    id="app_detail_account_db_root_pwd"
+                                                    name="app_detail_account_db_root_pwd"
+                                                    placeholder="">
+                                            <span class="input-group-addon"><i class="fa fa-pencil"></i></span>
+                                        </span>
+
+                                </span>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label"
+                                           for="app_detail_account_db_username">Username:</label>
+                                    <span class="col-xs-4">
+                                        <span class="input-group">
+                                              <input id="app_detail_account_db_username" class="form-control"
+                                                     name="app_detail_account_db_username">
+
+                                            <span class="input-group-addon"><i class="fa fa-pencil"></i></span>
+                                        </span>
+
+                                 </span>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label"
+                                           for="app_detail_account_db_password">Password:</label>
+                                    <span class="col-xs-4">
+                                        <span class="input-group">
+
+                                            <input id="app_detail_account_db_password" type="password"
+                                                   class="form-control"
+                                                   name="app_detail_account_db_password">
+                                              <span class="input-group-addon"><i class="fa fa-pencil"></i></span>
+                                        </span>
+
+                                 </span>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label" for="app_detail_account_db_retype_password">Re-type
+                                        Password:</label>
+                                    <span class="col-xs-4">
+                                        <span class="input-group">
+
+                                            <input id="app_detail_account_db_retype_password" type="password"
+                                                   class="form-control" name="app_detail_account_db_retype_password">
+
+                                            <span class="input-group-addon"><i class="fa fa-pencil"></i></span>
+                                        </span>
+
+                                 </span>
+                                </div>
+
+                            </div> <!-- block end -->
+
+                            <div id="app_detail_app_account_block" class="well-banner-required">
+
+
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label"
+                                           for="app_detail_account_app_login">Login:</label>
+                                    <span class="col-xs-4">
+                                        <span class="input-group">
+                                             <input id="app_detail_account_app_login" class="form-control"
+                                                    name="app_detail_account_app_login">
+                                            <span class="input-group-addon"><i class="fa fa-pencil"></i></span>
+                                        </span>
+
+                                 </span>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label"
+                                           for="app_detail_account_app_password">Password:</label>
+                                    <span class="col-xs-4">
+
+                                        <span class="input-group">
+
+                                            <input id="app_detail_account_app_password" type="password"
+                                                   class="form-control"
+                                                   name="app_detail_account_app_password">
+                                            <span class="input-group-addon"><i class="fa fa-pencil"></i></span>
+                                        </span>
+
+                                 </span>
+                                </div>
+
+
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label" for="app_detail_account_app_retype_password">Re-type
+                                        Password:</label>
+                                    <span class="col-xs-4">
+                                        <span class="input-group">
+
+                                            <input id="app_detail_account_app_retype_password" type="password"
+                                                   class="form-control" name="app_detail_account_app_retype_password">
+                                             <span class="input-group-addon"><i class="fa fa-pencil"></i></span>
+                                        </span>
+
+                                 </span>
+                                </div>
+
+
+                            </div>
+                        </form>
+                    </div>
+                    <!-- account Tag end -->
+
+                    <!-- app storage Tag start -->
+                    <div role="tabpanel" class="col-md-7 tab-pane" id="app_detail_app_storage_tab"
+                         style="padding-left: 0">
+                        <form id="app_detail_app_storage_frm" class="form-horizontal">
+
+
+                            <div class="form-group" style="position: relative">
+
+                                <label class="col-sm-2 control-label" for="app_detail_app_persist_enable">App
+                                    Persistence
+                                    Enable:</label>
+                                <span class="col-xs-4" style="position: absolute; top:10px; margin-left: 30px">
+                                       <span class="material-switch">
+
+                                        <input id="app_detail_app_persist_enable" name="app_detail_app_persist_enable"
+                                               type="checkbox" class="control-label"/>
+                                        <label class="label-success" for="app_detail_app_persist_enable"></label>
+                                        </span>
+
+                                </span>
+                            </div>
+
+                            <div id="app_detail_app_persist_block" class="well-banner-required hide">
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label" for="app_detail_app_sc_name">Storage
+                                        Class:</label>
+                                    <span class="col-xs-4">
+                                        <select class="form-control" name="app_detail_app_sc_name"
+                                                id="app_detail_app_sc_name">
+                                        </select>
+
+                                    </span>
+                                </div>
+
+                                <div class="form-group ">
+                                    <label class="col-sm-2 control-label" for="app_detail_app_access_mode">Access
+                                        Mode:</label>
+                                    <div class="col-xs-4">
+                                        <select class="form-control" name="app_detail_app_access_mode"
+                                                id="app_detail_app_access_mode">
+
+                                        </select>
+
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label" for="app_detail_app_capacity">HDD
+                                        Capacity:</label>
+                                    <span class="col-xs-4">
+                                    <span class="input-group">
+                                    <input type="text" class="form-control" placeholder="Capacity"
+                                           name="app_detail_app_capacity">
+                                    <span class="input-group-addon"><strong>G</strong></span>
+                                    </span>
+                                </span>
+                                </div>
+
+
+                            </div> <!-- app storage block end -->
+
+
+                        </form>
+
+                    </div>
+                    <!-- app storage Tag end -->
+
+                    <!-- db storage Tag start -->
+                    <div role="tabpanel" class="col-md-7 tab-pane" id="app_detail_db_storage_tab"
+                         style="padding-left: 0">
+                        <form id="app_detail_db_storage_frm" class="form-horizontal">
+
+
+                            <div class="form-group" style="position: relative">
+
+                                <label class="col-sm-2 control-label" for="app_detail_db_persist_enable">DB Persistence
+                                    Enable:</label>
+                                <span class="col-xs-4" style="position: absolute; top:10px; margin-left: 30px">
+                                       <span class="material-switch">
+
+                                        <input id="app_detail_db_persist_enable" name="app_detail_db_persist_enable"
+                                               type="checkbox" class="control-label"/>
+                                        <label class="label-success" for="app_detail_db_persist_enable"></label>
+                                        </span>
+
+                                </span>
+                            </div>
+                            <div id="app_detail_db_persist_block" class="hide well-banner-required">
+
+
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label" for="app_detail_account_db_name">DB
+                                        Name:</label>
+                                    <span class="col-xs-4">
+                                        <span class="input-group">
+                                            <input type="text" class="form-control" placeholder="DB Name"
+                                                   name="app_detail_account_db_name" id="app_detail_account_db_name">
+                                            <span class="input-group-addon"><i class="fa fa-pencil"></i></span>
+                                        </span>
+
+
+                                    </span>
+                                </div>
+                                <div class="form-group ">
+                                    <label class="col-sm-2 control-label" for="app_detail_db_sc_name">Storage
+                                        Class:</label>
+                                    <div class="col-xs-4">
+                                        <select class="form-control" name="app_detail_db_sc_name"
+                                                id="app_detail_db_sc_name">
+                                            {% for row in resource_sc %}
+                                                <option class="form-control"
+                                                        value="{{ row.name }}">{{ row.name }}</option>
+                                            {% endfor %}
+                                        </select>
+
+                                    </div>
+                                </div>
+
+                                <div class="form-group ">
+                                    <label class="col-sm-2 control-label" for="app_detail_db_access_mode">Access
+                                        Mode:</label>
+                                    <span class="col-xs-4">
+                                        <select class="form-control" name="app_detail_db_access_mode"
+                                                id="app_detail_db_access_mode">
+                                            {% for row in access_mode %}
+                                                <option class="form-control"
+                                                        value="{{ row.mode }}">{{ row.mode }}</option>
+                                            {% endfor %}
+                                        </select>
+
+                                    </span>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label" for="app_detail_db_capacity">HDD
+                                        Capacity:</label>
+                                    <span class="col-xs-4">
+                                    <span class="input-group">
+                                    <input type="text" class="form-control" placeholder="Capacity"
+                                           name="app_detail_db_capacity">
+                                    <span class="input-group-addon"><strong>G</strong></span>
+                                    </span>
+                                </span>
+                                </div>
+                            </div>
+                        </form>
+
+                    </div>
+                    <!-- db storage Tag end -->
+
+                    <!-- resource Tag start -->
+                    <div role="tabpanel" class="col-md-7 tab-pane" id="app_detail_resource_tab" style="padding-left: 0">
+                        <form id="app_detail_resource_frm" class="form-horizontal">
+
+
+                            <div class="form-group" style="position: relative">
+
+                                <label class="col-sm-2 control-label" for="app_detail_resource_enable">Resource Limit
+                                    Enable:</label>
+                                <span class="col-xs-4" style="position: absolute; top:10px; margin-left: 30px">
+                                       <span class="material-switch">
+
+                                        <input id="app_detail_resource_enable" name="app_detail_resource_enable"
+                                               type="checkbox" class="control-label"/>
+                                        <label class="label-success" for="app_detail_resource_enable"></label>
+                                        </span>
+                                </span>
+                            </div>
+
+
+                            <div id="app_detail_resource_limit_block" class="hide well-banner-optional">
+
+
+                                <div class="form-group ">
+                                    <label class="col-sm-2 control-label"
+                                           for="app_detail_resource_cpu_limit">Limit:</label>
+                                    <span class="col-xs-4">
+
+
+                                         <span class="input-group">
+                                        <span class="input-group-addon" style="color: white; background-color: darkred"
+                                        >CPU:</span>
+                                        <input type="text" class="form-control" placeholder="CPU"
+                                               id="app_detail_resource_cpu_limit"
+                                               aria-describedby="app_detail_resource_cpu_limit_addon"
+                                               name="app_detail_resource_cpu_limit">
+                                        <span class="input-group-addon"
+                                        >m</span>
+                                    </span>
+                                </span>
+                                </div>
+
+                                <div class="form-group ">
+                                    <label class="col-sm-2 control-label" for="app_detail_resource_ram_limit"></label>
+                                    <span class="col-xs-4">
+
+
+                                         <span class="input-group">
+                                        <span class="input-group-addon" style="color: white; background-color: darkred"
+                                        >RAM:</span>
+                                        <input type="text" class="form-control" placeholder="Memory"
+                                               id="app_detail_resource_ram_limit"
+                                               aria-describedby="app_detail_resource_ram_limit_addon"
+                                               name="app_detail_resource_ram_limit">
+                                        <span class="input-group-addon"
+                                        >Mi</span>
+                                    </span>
+                                </span>
+                                </div>
+                            </div>
+
+                            <div id="app_detail_resource_request_block" class="well-banner-required">
+
+                                <div class="form-group ">
+                                    <label class="col-sm-2 control-label"
+                                           for="app_detail_resource_cpu_request">Request:</label>
+                                    <span class="col-xs-4">
+
+
+                                         <span class="input-group">
+                                        <span class="input-group-addon" style="color: white; background-color: green"
+                                        >CPU:</span>
+                                        <input type="text" class="form-control" placeholder="CPU"
+                                               id="app_detail_resource_cpu_request"
+                                               name="app_detail_resource_cpu_request">
+                                        <span class="input-group-addon"
+                                        >m</span>
+                                    </span>
+
+                                </span>
+                                </div>
+
+                                <div class="form-group ">
+                                    <label class="col-sm-2 control-label" for="app_detail_resource_ram_request"></label>
+                                    <span class="col-xs-4">
+
+
+                                         <span class="input-group">
+                                        <span class="input-group-addon" style="color: white; background-color: green"
+                                        >RAM:</span>
+                                        <input type="text" class="form-control" placeholder="Memory"
+                                               aria-describedby="app_detail_resource_ram_request_addon"
+                                               id="app_detail_resource_ram_request"
+                                               name="app_detail_resource_ram_request">
+                                        <span class="input-group-addon"
+                                        >Mi</span>
+                                    </span>
+                                </span>
+                                </div>
+                            </div>
+                            <!-- app resource block end -->
+                        </form>
+
+                    </div>
+                    <!-- resource Tag end -->
+
+                    <!-- policy Tag start -->
+                    {#                    <div role="tabpanel" class="col-md-7 tab-pane" id="app_detail_policy_tab">#}
+                    {#                        <form id="app_policy_tab_frm" class="form-horizontal">#}
+                    {##}
+                    {#                            <div class="form-group ">#}
+                    {#                                <label class="col-sm-2 control-label" for="app_detail_name">App Name:</label>#}
+                    {#                                <span class="col-xs-4">#}
+                    {#                                    <input class="form-control" type="text" id="app_detail_name"#}
+                    {#                                           placeholder="App Name">#}
+                    {#                                </span>#}
+                    {#                            </div>#}
+                    {##}
+                    {#                            <div class="form-group">#}
+                    {#                                <label class="col-sm-2 control-label" for="app_detail_type">Type:</label>#}
+                    {#                                <span class="col-xs-4">#}
+                    {#                                    <input id="app_detail_type" class="form-control" disabled="disabled"#}
+                    {#                                           value="{{ row.type_name.typename }}">#}
+                    {#                                 </span>#}
+                    {#                            </div>#}
+                    {##}
+                    {#                            <div class="form-group  ">#}
+                    {#                                <label class="col-sm-2 control-label" for="formGroupInputSmall">Version</label>#}
+                    {#                                <span class="col-xs-4">#}
+                    {#                                    <select class="form-control" name="app_version" id="formGroupInputSmall">#}
+                    {#                                        {% for x in row.appversion_set.get_queryset %}#}
+                    {#                                            <option class="form-control" value="{{ row.id }}">{{ x }}</option>#}
+                    {#                                        {% endfor %}#}
+                    {#                                    </select>#}
+                    {##}
+                    {#                                </span>#}
+                    {#                            </div>#}
+                    {#                        </form>#}
+                    {##}
+                    {#                    </div>#}
+                    <!-- policy Tag end -->
+
+                    <!-- ingress Tag start -->
+                    <div role="tabpanel" class="col-md-7 tab-pane" id="app_detail_ingress_tab" style="padding-left: 0">
+
+                        <form id="app_detail_ingress_frm" class="form-horizontal">
+
+                            <div class="form-group" style="position: relative">
+
+                                <label class="col-sm-2 control-label" for="app_detail_ingress_enable">Ingress
+                                    Enable:</label>
+                                <span class="col-xs-4" style="position: absolute; top:10px; margin-left: 30px">
+                                       <span class="material-switch">
+
+                                        <input id="app_detail_ingress_enable" name="app_detail_ingress_enable"
+                                               type="checkbox" class="control-label"/>
+                                        <label class="label-success" for="app_detail_ingress_enable"></label>
+                                        </span>
+                                </span>
+                            </div>
+
+                            <div id="app_detail_ingress_block" class="hide well-banner-required">
+
+                                <div class="form-group ">
+                                    <label class="col-sm-2 control-label"
+                                           for="app_detail_ingress_namespace">Namespace:</label>
+                                    <div class="col-xs-4 ">
+                                        <select class="form-control" name="app_detail_ingress_namespace"
+                                                id="app_detail_ingress_namespace">
+
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+
+                                    <label class="col-sm-2 control-label" for="app_detail_ingress_secret">TLS
+                                        Secret:</label>
+                                    <div class="col-xs-4 ">
+                                        <select class="form-control" name="app_detail_ingress_secret"
+                                                id="app_detail_ingress_secret">
+
+                                        </select>
+
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label" for="app_detail_ingress_vhost">VHost
+                                        Name:</label>
+                                    <span class="col-xs-4">
+                                        <span class="input-group">
+                                             <input id="app_detail_ingress_vhost" class="form-control"
+                                                    name="app_detail_ingress_vhost">
+
+                                            <span class="input-group-addon"><i class="fa fa-pencil"></i></span>
+                                        </span>
+
+                                 </span>
+                                </div>
+
+
+                            </div>
+                        </form>
+                        <div class="well-banner-optional hide" id="app_detail_ingress_annote_block"
+                             style="height: 180px">
+                            <label class="col-sm-2 control-label" for="app_detail_ingress_annote">Ingress
+                                Annotations:</label>
+                            <span class="col-xs-5">
+                                    <input id="app_detail_ingress_annote" class="form-control" data-role="tagsinput"
+                                           name="app_detail_ingress_annote" type="text"
+                                           value="">
+                            </span>
+                        </div>
+                    </div>
+                    <!-- ingress Tag end -->
+
+
+                </div>
+
+
+            {% endfor %}
+
+
+        </section>
+    </div>
+</div>
+

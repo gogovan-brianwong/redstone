@@ -1,0 +1,44 @@
+
+Metrics = [
+            {
+             'Memory': {
+
+            'Total': {{ Memory.total_mem }},
+            'Used': {{ Memory.used_mem }},
+            'Free': {{ Memory.free_mem }}
+                }
+            },
+            {
+            'CPU': {
+
+            'CPU_phy_num': {{ CPU.cpu_phy_num }},
+            'CPU_log_num': {{ CPU.cpu_log_num }}
+                }
+            },
+            {
+            'CPU_Time': {
+            'User_time': {{ CPU_Time.cpu_user_time }},
+            'System_time': {{ CPU_Time.system_time }},
+            'Idel_time': {{ CPU_Time.idle_time }},
+            'Interrupt_time': {{ CPU_Time.interrupt_time }}
+                }
+            },
+            {
+            'Disk': {
+
+                'Total': {{ Disk.total_space }},
+                'Used': {{ Disk.used_space }},
+                'Free': {{ Disk.free_space }},
+                'Percent': {{ Disk.used_percent }},
+                }
+            },
+            {
+            'User': {
+            {% for user in Users %}
+            'username': '{{ user.login_user }}',
+            'host': '{{ user.login_host }}'
+            {% endfor %}
+                }
+            }
+
+]

@@ -1,0 +1,122 @@
+<style>
+    td.app_name {
+        color: #588fc4;
+    }
+
+    td.app_name:hover {
+        text-decoration: underline;
+
+        cursor: pointer;
+
+    }
+
+
+</style>
+<div class="col-md-12">
+
+
+    <table id="all_deployed_app_tbl" class="table table-striped table-bordered" style="margin-left: 20px; padding: 8px"
+           cellspacing="0"
+           cellpadding="3">
+        <thead>
+        <tr>
+            <th style="display: none">UID</th>
+            <th>Name</th>
+            <th>Namespace</th>
+            <th>Replicas</th>
+            <th>Labels</th>
+            <th>Containers</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+
+        </thead>
+        <tbody>
+        {% for row in data %}
+            <tr>
+                <td style="display: none;">{{ row.uid }}</td>
+                <td class="app_name"><a href="javascript:;" data-toggle="modal"
+                                        data-target="#deployed_app_detail_modal">{{ row.name }}</a></td>
+                <td>{{ row.namespace }}</td>
+                <td>{{ row.replicas }}</td>
+                <td>
+                    {% for x, y in row.labels.items %}
+                        <span class="k8s-badge-notify">{{ x }} : {{ y }}</span>
+                    {% endfor %}
+                </td>
+                <td>
+                    {% for item in row.containers %}
+                        <span class="k8s-badge-container">{{ item.image }}</span>
+                    {% endfor %}
+                </td>
+                {% if row.status %}
+                    <td style="align-items: center; vertical-align: middle"><img width="23px" height="23px"
+                                                                                 src="/static/img/icons/accept-icon.png"
+                                                                                 alt=""></td>
+                {% else %}
+                    <td><img width="23px" height="23px" src="/static/img/icons/red_light.png" alt=""></td>
+                {% endif %}
+                <td style="min-width: 100px">
+                    <!-- Small button group -->
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-primary btn-sm">Action</button>
+                        <button class="btn btn-primary btn-sm dropdown-toggle" type="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="caret"></span>
+                            <span class="sr-only">Toggle Dropdown</span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a name="app_details" href="#">View</a></li>
+                            <li><a name="app_remove" href="#">Remove</a></li>
+
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+
+        {% endfor %}
+
+        </tbody>
+
+    </table>
+    {% include "application/deployed_app_detail.html" %}
+
+    <script>
+        $('td.app_name').on('click', function () {
+            var app_uid = $(this).prev().text();
+            var dsModal = $('#deployed_app_detail_modal').blur();
+
+            $.ajax({
+                url: '/application/fetch_spec_app/' + app_uid + '/',
+                type: 'get',
+                success: function (e) {
+                    ret = JSON.parse(e)
+                }
+            });
+            dsModal.on('shown.bs.modal', function (e) {
+
+                    $('#jsoneditor').empty();
+                    var cont = document.getElementById('jsoneditor');
+                    var options = {
+                        mode: 'tree',
+                        search: true,
+                        modes: ['code', 'form', 'text', 'tree', 'view']
+
+                    };
+                    var editor = new JSONEditor(cont, options);
+
+
+                    editor.set(ret.data);
+                    editor.expandAll();
+
+            }).modal('show');
+
+
+        });
+
+
+    </script>
+
+
+</div>
+

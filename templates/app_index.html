@@ -1,0 +1,480 @@
+{% extends "base.html" %}
+{% block content %}
+
+
+    <style>
+        .center-block {
+
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 0;
+
+        }
+
+        .app_detail_form {
+            color: orangered;
+            padding-top: 5px;
+            padding-left: 0;
+            margin-left: 0;
+        }
+    </style>
+
+    <!--commonmain content start-->
+    <section id="main-content">
+        <section class="wrapper">
+            <!-- content page header start-->
+            <div class="row">
+                <div class="col-lg-12">
+                    <h3 class="page-header"><i class="fa fa-table"></i>application repository</h3>
+                    <ol class="breadcrumb">
+                        <li><i class="fa fa-home"></i><a href="/common/dashboard/">Home</a></li>
+                        <li><i class="fa fa-home"></i><a href="/application/index/">Repository</a></li>
+                    </ol>
+                </div>
+            </div>
+            <!-- content page header end-->
+            <div class="row">
+
+
+                <div class="row"> <!-- navbar search / filter -->
+                    <div class="col-md-12">
+                        <div class="col-md-3 ">
+                            <label for="apptype" style="margin-right: 20px; margin-left: 20px">Filter by:</label>
+                            <select class="selectpicker show-tick" name="apptype" id="apptype">
+                                <option value="">Select type</option>
+                                {% for item in apptype %}
+                                    <option value="{{ item.id }}">{{ item.typename }}</option>
+                                {% endfor %}
+                            </select>
+                            <span>
+                            <button type="submit" class="btn btn-sm btn-warning" name="app_repo_list_refresh"><i
+                                    class="fa fa-refresh"></i></button>
+                        </span>
+                            <span>
+                            <button type="button" class="btn btn-sm btn-primary" name="all_installed_app"> <i
+                                    class="fa fa-table"></i></button>
+                        </span>
+                        </div>
+
+                        <div class="col-md-4">
+
+                            <label for="searchapp" style="margin-right: 10px;">Search App: </label>
+                            <div class="center-block" style="display: inline-block">
+                                <input id="searchapp" type="text" class="form-control">
+
+                            </div>
+
+                            <span>
+                            <button type="button" name="clear-btn" class="btn btn-sm btn-default"><i
+                                    class="fa fa-remove"></i></button>
+                        </span>
+                            <span id="err_msg"></span>
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+                <hr class="style14">
+
+                <div class="row">
+                    <div class="col-md-11 pull-left" id="app_content">
+                        {% include "application/app_repo_list.html" %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <script>
+
+                $(document).ready(function () {
+                    $(".selectpicker").selectpicker('refresh');
+
+                });
+
+
+                $('button:submit').click(function () {
+                    location.reload();
+                });
+
+
+                $('#apptype').on('change', function () {
+                    var sel_type = $(this).val().trim();
+
+                    fetch_selected_repo(sel_type)
+                });
+
+                $('button[name=all_installed_app]').on('click', function () {
+
+                    retrieve_all_deployed_app();
+
+                });
+
+                function retrieve_all_deployed_app() {
+                    $.ajax({
+                        url: '/application/all_deployed_app/',
+                        type: 'get',
+                        success: function (e) {
+                            $('#app_content').empty().html(e.html)
+                        }
+                    })
+
+                }
+
+                $(document).on('click', 'a[name=app_remove]', function () {
+
+                    var select_app = $(this).parents('tr').children().first().text();
+                    bootbox.confirm({
+                        title: "Delete Application",
+                        message: "Do you want to delete " + "<span style='color: red'>" + select_app + "</span>" + " now? This cannot be undone.",
+                        buttons: {
+                            cancel: {
+                                label: '<i class="fa fa-times"></i> Cancel'
+                            },
+                            confirm: {
+                                label: '<i class="fa fa-check"></i> Confirm'
+                            }
+                        },
+                        callback: function (result) {
+                            if (result) {
+                                $.ajax({
+                                    url: '/application/delete_app/',
+                                    type: 'post',
+                                    data: {'select_app': select_app},
+                                    success: function (e) {
+                                        ret = JSON.parse(e);
+                                        if (ret.status) {
+                                            msg = "Application " + "<strong>" + select_app + "</strong>" + " has been deleted successfully.";
+                                            notification_success(msg);
+                                            retrieve_all_deployed_app();
+                                        }
+                                        else {
+
+                                            msg = ret.message;
+                                            notification_err(msg)
+                                        }
+                                    }
+
+                                })
+
+                            }
+                        }
+                    });
+
+                });
+
+
+                function fetch_selected_repo(selected) {
+
+                    $.ajax({
+                        url: '/application/index/' + selected + '/',
+                        type: 'post',
+                        data: {'data': selected },
+                        success: function (e) {
+                            $('#app_content').empty().html(e.html)
+                        }
+
+                    })
+                }
+
+
+                $('a[name=typename]').on('click', function () {
+
+                    var select_type = $(this).text().trim();
+                    fetch_selected_repo(select_type);
+
+                });
+                $('button[name=clear-btn]').on('click', function () {
+                    $('#searchapp').val('');
+                });
+
+
+                function hasUnicode(inputString) {
+                    for (var i = 0; i < inputString.length; i++) {
+                        if (inputString.charCodeAt(i) > 127) {
+                            return true
+                        }
+                    }
+                    return false
+
+
+                }
+
+                $('#searchapp').keypress(function (e) {
+
+
+                    if (e.which === 13) {
+
+                        var input_string = $('#searchapp').val();
+
+                        if (hasUnicode(input_string)) {
+
+                            if (input_string.length >= 2) {
+
+                                $.ajax({
+                                    url: '/application/search_app/',
+                                    type: 'post',
+                                    data: {'data': input_string},
+                                    success: function (e) {
+                                        if (e.html.length === 0) {
+                                            $('#app_content').empty().html('<div class="col-md-6 pull-right"><h4>No match data found</h4></div>')
+
+                                        }
+                                        else {
+                                            $('#app_content').empty().html(e.html)
+                                        }
+                                    }
+
+                                });
+                            }
+
+                        } // hasUnicode end
+                        else if (input_string.trim().length >= 3) {
+
+                            $.ajax({
+                                url: '/application/search_app/',
+                                type: 'post',
+                                data: {'data': input_string},
+                                success: function (e) {
+                                    if (e.html.length === 0) {
+                                        $('#app_content').empty().html('<div class="col-md-6 pull-right"><h4>No match data found</h4></div>')
+
+                                    }
+                                    else {
+                                        $('#app_content').empty().html(e.html)
+                                    }
+
+                                }
+
+                            });
+
+                        }
+
+                        else {
+
+                            $('#err_msg').css('color', 'red').append('Invalid input');
+                            setTimeout(function () {
+
+                                $('#err_msg').text('')
+
+                            }, 5000)
+                        }
+                    }
+
+                });
+
+
+                $(document).on('click', '.showmore', function () {
+                    var app_id = $(this).parents('.app-repo').attr('id');
+                    get_app_detail(app_id);
+
+                });
+
+                function get_app_detail(aid) {
+                    $.ajax({
+                        url: '/application/details/' + aid + '/',
+                        type: 'get',
+                        success: function (e) {
+                            $('#app_content').empty().html(e.html)
+
+                        }
+
+                    })
+
+                }
+
+                {# app-detail script start #}
+
+                $(document).on('change', 'input[name=app_detail_app_persist_enable]', function () {
+                    if (this.checked) {
+
+                        $('#app_detail_app_persist_block').removeClass('hide');
+                        var app_sc = $('#app_detail_app_sc_name').empty();
+                        var app_access_mode = $('#app_detail_app_access_mode').empty();
+
+                        get_current_sc_accessmode(app_sc, app_access_mode)
+                    }
+
+                    else {
+                        $('#app_detail_app_persist_block').addClass('hide')
+                    }
+                });
+
+
+                function get_current_sc_accessmode(elem_sc, elem_acmode) {
+
+                    $.ajax({
+                        url: '/application/listresources/',
+                        type: 'get',
+                        success: function (e) {
+                            ret = JSON.parse(e);
+                            $.each(ret.resource_sc, function (idx, e) {
+                                $(elem_sc).append('<option class=form-control value=' + e.name + '>' + e.name + '</option>')
+                            });
+                            $.each(ret.access_mode, function (idx, e) {
+                                $(elem_acmode).append('<option class=form-control value=' + e.mode + '>' + e.mode + '</option>')
+                            })
+                        }
+                    })
+
+                }
+
+                $(document).on('change', 'input[name=app_detail_db_persist_enable]', function () {
+                    if (this.checked) {
+
+                        $('#app_detail_db_persist_block').removeClass('hide');
+                        var db_sc = $('#app_detail_db_sc_name').empty();
+                        var db_accessmode = $('#app_detail_db_access_mode').empty();
+                        get_current_sc_accessmode(db_sc, db_accessmode)
+
+                    }
+                    else {
+                        $('#app_detail_db_persist_block').addClass('hide')
+                    }
+                });
+                $(document).on('change', 'input[name=app_detail_allowEmptyPassword]', function () {
+                    if (this.checked) {
+
+                        $('#app_detail_account_block').addClass('hide');
+
+                    }
+
+                    else {
+
+                        $('#app_detail_account_block').removeClass('hide');
+                    }
+
+
+                });
+
+
+                $(document).on('change', 'input[name=app_detail_resource_enable]', function () {
+                    if (this.checked) {
+                        $('#app_detail_resource_limit_block').removeClass('hide');
+
+
+                    }
+
+                    else {
+
+                        $('#app_detail_resource_limit_block').addClass('hide');
+                    }
+
+
+                });
+                $(document).on('change', 'input[name=app_detail_ingress_enable]', function () {
+                    if (this.checked) {
+                        $('#app_detail_ingress_block').removeClass('hide').find('#app_detail_ingress_namespace').empty();
+                        $('#app_detail_ingress_annote_block').removeClass('hide');
+                        $('#app_detail_ingress_annote').tagsinput();
+                        get_all_ns('#app_detail_ingress_namespace');
+
+                    }
+
+                    else {
+
+                        $('#app_detail_ingress_block').addClass('hide');
+                        $('#app_detail_ingress_annote_block').addClass('hide');
+                    }
+
+
+                });
+
+
+                $(document).on('change', '#app_detail_ingress_namespace', function () {
+                    var select_ns = $(this).val().trim();
+                    $('#app_detail_ingress_secret').empty();
+                    $.ajax({
+                        url: '/application/list/',
+                        type: 'post',
+                        data: {data: select_ns},
+                        success: function (response) {
+                            ret = JSON.parse(response);
+                            $.each(ret.data.body, function (idx, e) {
+                                $('#app_detail_ingress_secret').append('<option value=' + e.name + '>' + e.name + '</option>')
+                            });
+                            $.each(ret.data.ingress_annote, function (idx, e) {
+                                $('#app_detail_ingress_annote').tagsinput('add', e)
+                            })
+                        }
+
+                    })
+                });
+                $(document).on('click', '#app_deploy_btn', function () {
+
+                    var that = $(this);
+                    that.attr('disabled', 'disabled').prepend('<i class="fa fa-spinner fa-spin" style="margin-right: 5px"></i>');
+
+                    var select_appid = $(this).parents('div').attr('data-appid');
+                    var select_appname = $(this).parents('div').attr('data-appname').toLowerCase();
+
+
+                    if ($('input[name=app_detail_ingress_enable]').prop('checked') === true) {
+
+                        var ing_annote = JSON.stringify($('#app_detail_ingress_annote').tagsinput('items'));
+                    }
+                    else {
+                        ing_annote = 'None'
+                    }
+
+
+                    $.ajax({
+                        url: '/application/details/' + select_appid + '/',
+                        type: 'post',
+                        cache: false,
+                        data: {
+                            basic_frm: $('#app_detail_basic_frm').serializeJSON(),
+                            account_frm: $('#app_detail_account_frm').serializeJSON(),
+                            app_storage_frm: $('#app_detail_app_storage_frm').serializeJSON(),
+                            db_storage_frm: $('#app_detail_db_storage_frm').serializeJSON(),
+                            resource_frm: $('#app_detail_resource_frm').serializeJSON(),
+                            ingress_frm: $('#app_detail_ingress_frm').serializeJSON(),
+                            custom_frm: $('#app_detail_custom_frm').serializeJSON(),
+                            ingress_annote: ing_annote,
+                            select_appname: select_appname
+                        },
+                        success: function (response) {
+
+
+                            ret = JSON.parse(response);
+                            if (ret.data === 200) {
+
+                                msg = '<strong>' + select_appname + '</strong>\t\tis installed successfully. Please check application table.';
+                                notification_success(msg)
+                            }
+                            else if (ret.status !== 200) {
+
+                                $.each(ret.data, function (key, value) {
+                                    $('#' + key).parent().parent().after('<span class="col-xs-3 app_detail_form">' + value[0] + '</span>')
+                                });
+                            }
+                            else {
+                                msg = '<strong>' + select_appname + '</strong>\t\tfailed to installed. Check configuration and try again.';
+                                notification_err(msg)
+
+                            }
+
+                            that.removeAttr('disabled').children().remove();
+
+                        }
+
+                    })
+
+                });
+
+
+            </script>
+
+        </section>
+
+    </section>
+
+{% endblock %}
+
+
+
+

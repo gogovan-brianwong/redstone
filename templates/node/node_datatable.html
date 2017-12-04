@@ -1,0 +1,73 @@
+<table id="node-selection" class="table table-striped table-hover col-border"
+       cellspacing="0" width="100%">
+
+
+    <!-- <table class="table table-striped table-advance table-hover"> -->
+    <thead>
+    <tr>
+
+        <th>No.</th>
+        <th style="display: none">Unique ID</th> <!-- base64 encoded uid from database -->
+        <th>Host Name</th>
+        <th>IP Address</th>
+        <th>Schdulable</th>
+        <th>OS Version</th>
+        <th>Kernel Version</th>
+        <th>Status</th>
+        <th>Action</th>
+
+    </tr>
+    </thead>
+    <tbody id="node-tbody">
+    {% for row in content %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td class="uid" style="display: none">{{ row.uid }}</td>
+            <td class="hostname" data-target="#nodeCarousel"><a href="javascript:;"></a>{{ row.hostname }}</td>
+            <td class="ipaddr">{{ row.ipaddr }}</td>
+            <td>
+                {% if row.schedulable is undefined %}
+                    <span style="text-align: center; color: green">Schedulable</span>
+
+                {% else %}
+                    <span style="text-align: center; color: red;">Unschedulable</span>
+
+                {% endif %}
+            </td>
+            <td>{{ row.osimage }}</td>
+            <td>{{ row.kernel_ver }}</td>
+            <td>
+                {%  if row.conditions == 'True' %}
+                {#                <div style="max-width: 100px">#}
+                    <img width="23px" height="23px" alt="" src="/static/img/icons/accept-icon.png"
+                     style="text-align: center">
+                {% else %}
+                <img width="23px" height="23px" alt="" src="/static/img/icons/red_light.png"
+                     style="text-align: center">
+                {% endif %}
+                {#                        <span class="sr-only">100% Complete (success)</span>#}
+                {#                </div>#}
+            </td>
+            <td style="min-width: 100px">
+                <!-- Small button group -->
+                <div class="btn-group">
+                    <button type="button" class="btn btn-primary btn-sm">Action</button>
+                    <button class="btn btn-primary btn-sm dropdown-toggle" type="button"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="caret"></span>
+                        <span class="sr-only">Toggle Dropdown</span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a name="host_detail" href="#">View</a></li>
+                        <li><a name="host_remove" href="#">Remove</a></li>
+                        <li><a name="host_change_sch" href="#">Schedulabe</a></li>
+
+                    </ul>
+                </div>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+
+
+</table>

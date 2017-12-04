@@ -1,0 +1,169 @@
+
+.links line {
+    stroke: #999;
+    stroke-opacity: 0.5;
+}
+
+.nodes circle {
+    stroke: #75564f;
+    stroke-width: 2.5px;
+    cursor: pointer;
+
+}
+
+.cluster {
+    cursor: pointer;
+    position: relative;
+    background-color: #1f77b4;
+    width: 15px;
+    height: 15px;
+}
+
+.host {
+    cursor: pointer;
+    position: relative;
+    background: #ffbb78;
+    width: 15px;
+    height: 15px;
+}
+
+.service {
+    cursor: pointer;
+    position: relative;
+    background: #d62728;
+    width: 15px;
+    height: 15px;
+}
+
+.rcontroller {
+    cursor: pointer;
+    position: relative;
+    background: #98DF8A;
+    width: 15px;
+    height: 15px;
+}
+
+.pod {
+    cursor: pointer;
+    position: relative;
+    background: #2CA02C;
+    width: 15px;
+    height: 15px;
+}
+
+.docker-container {
+    cursor: pointer;
+    position: relative;
+    background: #AEC7E8;
+    width: 15px;
+    height: 15px;
+}
+
+.container-image {
+    cursor: pointer;
+    position: relative;
+    background: #FF7F0E;
+    width: 15px;
+    height: 15px;
+}
+
+.legend-dsp {
+    position: absolute;
+    left: 30px;
+    line-height: 15px;
+}
+
+.hide_legend {
+    display: none;
+}
+
+.resource-badge {
+    position: absolute;
+    right: -200px;
+}
+
+.k8s-badge {
+    display: inline-block;
+    min-width: 15px;
+    padding: 3px 7px;
+    font-size: 12px;
+    font-weight: bold;
+    line-height: 1;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    background-color: #922999;
+    border-radius: 5px;
+}
+
+
+.k8s-badge-notify {
+    display: inline-block;
+    min-width: 15px;
+    padding: 3px 7px;
+    margin: 0.5px;
+    font-size: 13px;
+    font-weight: lighter;
+    line-height: 1.5;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    background-color: #b02d5d;
+    border-radius: 12px;
+
+}
+.k8s-badge-container {
+    display: inline-block;
+    min-width: 15px;
+    padding: 3px 7px;
+    margin: 0.5px;
+    font-size: 13px;
+    font-weight: normal;
+    line-height: 1.5;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    background-color: #087517;
+    border-radius: 12px;
+
+}
+.max-lines {
+    display: block;
+   overflow: hidden;
+   text-overflow: ellipsis;
+    word-wrap: break-word;
+   line-height: 1.2em;        /* fallback */
+   max-height: 4.8em;       /* fallback */
+}
+
+.ellipsis {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display:block;
+    width : 100px; /* this could be defined on any parent */
+}
+.ellipsis:after{
+    content: '...';
+}
+
+.footbar {
+
+    width: 100%;
+    height: 100px;
+    position: fixed;
+    bottom: 0;
+    margin-bottom: 0;
+    background: #edf9ea;
+    z-index: 10;
+
+}
+
+.color-gradient{
+        background: -webkit-radial-gradient(circle, #f5faf4, #ffc8a5); /* Standard syntax */
+
+}
+

@@ -1,0 +1,86 @@
+[
+  {
+    'hostname': 'k8s-node-4',
+    'canvas_id': 'fs_canvas_0',
+    'disk_used': 1.94,
+    'metric_type': 'Filesystem Used',
+    'disk_total': 26.76,
+    'disk_percent': 7.6,
+    'disk_free': 23.68,
+    'hostip': '192.168.151.17',
+    'host_metric_type': 'fs_metric',
+    'gauge_id': 'fs_gauge_0'
+  },
+  {
+    'hostname': 'k8s-node-3',
+    'canvas_id': 'fs_canvas_1',
+    'disk_used': 17.11,
+    'metric_type': 'Filesystem Used',
+    'disk_total': 36.45,
+    'disk_percent': 49.0,
+    'disk_free': 17.8,
+    'hostip': '192.168.151.16',
+    'host_metric_type': 'fs_metric',
+    'gauge_id': 'fs_gauge_1'
+  },
+  {
+    'hostname': 'k8s-node-2',
+    'canvas_id': 'fs_canvas_2',
+    'disk_used': 22.24,
+    'metric_type': 'Filesystem Used',
+    'disk_total': 36.45,
+    'disk_percent': 63.7,
+    'disk_free': 12.67,
+    'hostip': '192.168.151.15',
+    'host_metric_type': 'fs_metric',
+    'gauge_id': 'fs_gauge_2'
+  },
+  {
+    'hostname': 'k8s-node-1',
+    'canvas_id': 'fs_canvas_3',
+    'disk_used': 16.01,
+    'metric_type': 'Filesystem Used',
+    'disk_total': 36.45,
+    'disk_percent': 45.9,
+    'disk_free': 18.89,
+    'hostip': '192.168.151.14',
+    'host_metric_type': 'fs_metric',
+    'gauge_id': 'fs_gauge_3'
+  },
+  {
+    'hostname': 'k8s-master-2',
+    'canvas_id': 'fs_canvas_4',
+    'disk_used': 7.28,
+    'metric_type': 'Filesystem Used',
+    'disk_total': 26.76,
+    'disk_percent': 28.4,
+    'disk_free': 18.33,
+    'hostip': '192.168.151.12',
+    'host_metric_type': 'fs_metric',
+    'gauge_id': 'fs_gauge_4'
+  },
+  {
+    'hostname': 'k8s-master-1',
+    'canvas_id': 'fs_canvas_5',
+    'disk_used': 8.69,
+    'metric_type': 'Filesystem Used',
+    'disk_total': 26.76,
+    'disk_percent': 33.9,
+    'disk_free': 16.93,
+    'hostip': '192.168.151.11',
+    'host_metric_type': 'fs_metric',
+    'gauge_id': 'fs_gauge_5'
+  },
+  {
+    'hostname': 'k8s-master-3',
+    'canvas_id': 'fs_canvas_6',
+    'disk_used': 13.09,
+    'metric_type': 'Filesystem Used',
+    'disk_total': 26.76,
+    'disk_percent': 51.1,
+    'disk_free': 12.52,
+    'hostip': '192.168.151.13',
+    'host_metric_type': 'fs_metric',
+    'gauge_id': 'fs_gauge_6'
+  }
+]

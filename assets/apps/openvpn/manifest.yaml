@@ -1,0 +1,89 @@
+# Default values for openvpn.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+replicaCount: {{ app_detail_basic_replicas }}
+image:
+  repository: {{ app_detail_basic_image }} #jfelten/openvpn-docker
+  tag: {{ app_detail_basic_version }} #1.1.0
+  pullPolicy: {{ app_detail_basic_imagepullpolicy }}
+  pullSecrets: {{ app_detail_basic_imagepullsecrets }}
+service:
+  name: {{ app_detail_basic_appname }}
+  type: {{ app_detail_basic_service_type }}
+{% if not app_detail_openvpn_ext_port %}
+  externalPort: 443
+{% else %}
+  externalPort: {{ app_detail_openvpn_ext_port}} #443
+{% endif %}
+{% if not app_detail_openvpn_ext_port %}
+  internalPort: 443
+{% else %}
+  internalPort: {{ app_detail_openvpn_int_port}} #443
+{% endif %}
+resources:
+  limits:
+{% if not app_detail_resource_cpu_limit %}
+    cpu: 300m
+{% else %}
+    cpu: {{ app_detail_resource_cpu_limit }}m #300m
+{% endif %}
+{% if not app_detail_resource_ram_limit %}
+    memory: 300Mi
+{% else %}
+    memory: {{ app_detail_resource_ram_limit }}Mi #300m
+{% endif %}
+  requests:
+    cpu: {{ app_detail_resource_cpu_request }}m #300m
+    memory: {{ app_detail_resource_ram_request }}Mi #128Mi
+persistence:
+{% if not app_detail_app_persist_enable %}
+  enabled: False # boolean
+{% else %}
+  enabled: True # boolean
+{% endif %}
+  ## openvpn data Persistent Volume Storage Class
+  ## If defined, storageClassName: <storageClass>
+  ## If set to "-", storageClassName: "", which disables dynamic provisioning
+  ## If undefined (the default) or set to null, no storageClassName spec is
+  ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+  ##   GKE, AWS & OpenStack)
+  ##
+  storageClass: "{{ app_detail_app_sc_name}}"
+  accessMode: {{ app_detail_app_access_mode }}
+  size: {{ app_detail_app_capacity }}G
+openvpn:
+    {% if not app_detail_openvpn_network %}
+    # Network allocated for openvpn clients (default: 10.240.0.0).
+    OVPN_NETWORK: 10.240.0.0
+    {% else %}
+    OVPN_NETWORK: "{{ app_detail_openvpn_network }}"
+    {% endif %}
+    # Network subnet allocated for openvpn client (default: 255.255.0.0).
+    {% if not app_detail_openvpn_subnet %}
+    OVPN_SUBNET: 255.255.0.0
+    {% else %}
+    OVPN_SUBNET: "{{ app_detail_openvpn_subnet }}"
+    {% endif %}
+    # Protocol used by openvpn tcp or udp (default: udp).
+    {% if not app_detail_openvpn_proto %}
+    OVPN_PROTO: tcp
+    {% else %}
+    OVPN_PROTO: {{ app_detail_openvpn_proto }}
+    {% endif %}
+    # Kubernetes pod network (optional).
+    {% if not app_detail_ovpn_k8s_pod_network %}
+    OVPN_K8S_POD_NETWORK: "10.0.0.0"
+    {% else %}
+    OVPN_K8S_POD_NETWORK: "{{ app_detail_ovpn_k8s_pod_network }}"
+    {% endif %}
+    {% if not app_detail_ovpn_k8s_pod_subnet %}
+    # Kubernetes pod network subnet (optional).
+    OVPN_K8S_POD_SUBNET: "255.0.0.0"
+    {% else %}
+    OVPN_K8S_POD_SUBNET: "{{ app_detail_ovpn_k8s_pod_subnet }}"
+    {% endif %}
+    # Arbitrary lines appended to the end of the server configuration file
+    #conf: |
+    #  max-clients 100
+    #  client-to-client
+

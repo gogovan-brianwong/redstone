@@ -1,0 +1,794 @@
+{% extends "base.html" %}
+{% block content %}
+    <style>
+
+        .links line {
+            stroke: #999;
+            stroke-opacity: 0.5;
+        }
+
+        .nodes circle {
+            stroke: #75564f;
+            stroke-width: 2.5px;
+            cursor: pointer;
+            width: 50px;
+            height: 50px;
+        }
+
+        .center {
+            width: 150px;
+            margin: 40px auto;
+
+        }
+
+        .title-hpa-list {
+            text-align: center;
+            font-size: 25px;
+            color: #204d74;
+            font-family: monospace;
+            font-style: oblique;
+        }
+
+        #showAllHPA_table td {
+            text-align: center;
+            font-size: 13px;
+            color: #666666;
+            font-family: monospace;
+            font-style: normal;
+            vertical-align: middle;
+        }
+
+        #showAllHPA_table th {
+            background-color: #4E6CA3;
+            color: #f2f7ff;
+            text-align: center;
+
+        }
+
+        .my-input-class {
+            padding: 3px 6px;
+            width: 60px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            margin-bottom: 7px;
+        }
+
+        .my-confirm-class {
+            padding: 3px 6px;
+            font-size: 0.1em;
+            color: white;
+            text-align: center;
+            vertical-align: middle;
+            border-radius: 6px;
+            background-color: #337ab7;
+            border-bottom: 5px;
+            text-decoration: none;
+        }
+
+        .my-cancel-class {
+            padding: 3px 6px;
+            font-size: 0.1em;
+            color: white;
+            text-align: center;
+            vertical-align: middle;
+            border-radius: 6px;
+            background-color: #a94442;
+            text-decoration: none;
+        }
+
+        .error {
+            border: solid 1px;
+            border-color: #a94442;
+        }
+
+        .destroy-button {
+            padding: 5px 10px 5px 10px;
+            border: 1px blue solid;
+            background-color: lightgray;
+        }
+
+    </style>
+
+    <section id="main-content">
+        <section class="wrapper">
+
+            <div class="row">
+                <div class="col-lg-12">
+
+
+                    <h3 class="page-header"><i class="fa fa-table"></i> Horizontal Pod Autoscaler </h3>
+                    <ol class="breadcrumb">
+                        <li><i class="fa fa-home"></i><a href="#">Home</a></li>
+                        <li><i class="fa fa-table"></i><a href="/nodes/status/"></a>Status</li>
+                        <li><i class="fa fa-th-list"></i>HPA</li>
+                    </ol>
+                </div>
+            </div>
+
+{#            <div class="row">#}
+{#                <div class="col-md-12">#}
+{#                    <ul class="nav nav-pills nav-justified">#}
+{#                        <li role="presentation" class="home active"><a href="#">Home</a></li>#}
+{##}
+{#                        <li role="presentation" class="test1"><a href="#">Test</a></li>#}
+{#                    </ul>#}
+{#                </div>#}
+{##}
+{#            </div>#}
+            <div class="row" style="position:relative;">
+                <div class="col-md-12 " id="home">
+
+                    <div class="col-md-12 panel panel-default">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <hr class="style1 hide">
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <p class="title-hpa-list">Horizontal Pod Autoscaler List</p>
+                            <a class="btn btn-info" role="button" data-toggle="collapse" href="#collapseExample"
+                               aria-expanded="false" aria-controls="collapseExample"><i class="fa fa-plus" style="margin-right: 8px"> </i>
+                                Add HPA
+                            </a>
+                            &nbsp;&nbsp;
+                            <div id="addhpa_frm_refresh" class="btn btn-warning"><i class="fa fa-refresh"></i></div>
+                            <div id="addhpa_loading_spinner"
+                                 style="position: absolute; top: 50px; left: 320px; z-index: 20;" class="hide"><i
+                                    class="fa fa-refresh fa-spin fa-2x fa-fw"></i>
+                            </div>
+                            <div id="addhpa_completed_icon"
+                                 style="position: absolute; top: 50px; left: 320px; z-index: 19;" class="hide">
+                                <img src="/static/img/icons/tick_finished" style="width: 20px; height: 20px;" alt="">
+                            </div>
+
+                            <!-- collapse form to add HPA start -->
+                            {% include "hpa/collap_frm_addhpa.html" %}
+
+{#                            {% include "hpa/collap_cpu_graph.html" %}#}
+                            <!-- collapse form to add HPA start -->
+
+                        </div>
+                        <table id="showAllHPA_table" class="table table-striped table-bordered" cellspacing="0"
+                               cellpadding="3" width="100%">
+                            <thead>
+                            <tr>
+                                <th>Version</th>
+                                <th>Kind</th>
+                                <th>Created At</th>
+                                <th>Name</th>
+                                <th>Namespace</th>
+                                <th>UID</th>
+                                <th>Max_repl</th>
+                                <th>Min_repl</th>
+                                <th>Target Ref.</th>
+                                <th>CPU Percent</th>
+                                <th>Current CPU Percent</th>
+                                <th>Current repl</th>
+                                <th>Desired repl</th>
+                                {#                                <th>Last Scale Time</th>#}
+                                <th>Action</th>
+
+                            </tr>
+
+                            </thead>
+
+
+                        </table>
+                    </div>
+                </div>
+
+                <div class="col-md-12 hide" id="test1">
+                    <div class="col-md-3">
+                        <div class="col-md-12 ">
+                            <div class="form-group">
+                                <label for="select_namespace">Select Namespace: </label>
+                                <select class="selectpicker show-tick form-control"
+                                        id="select_namespace_test"
+                                        required="required"
+                                        name="current_ns">
+
+                                    {% for row in all_namespaces %}
+                                        <option>{{ row.ns_name }}</option>
+
+                                    {% endfor %}
+
+                                </select>
+                            </div>
+
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="select_hpa_deployment">Select HPA: </label>
+                                <select class="selectpicker show-tick form-control"
+                                        id="select_hpa_test"
+                                        name="current_hpa_totest">
+
+                                </select>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="col-md-9">
+
+                        <svg id="hpa_loadtest" width="800" height="700"></svg>
+                    </div>
+
+
+                </div>
+            </div>
+
+
+        </section>
+    </section>
+
+    <script src="/static/css/custom/hpa_option.js"></script>
+
+
+    <script>
+
+
+        var action_html = '<div class="btn-group"> <button type="button" class="btn btn-primary btn-sm">Action</button> <button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <span class="caret"></span> </button> <ul class="dropdown-menu"><li><a name="remove_hpa" href="#">Remove</a></li></ul> </div>';
+
+        $(function () {
+            retrieve_allns_hpa();
+            threhold_notification();
+        });
+
+        function retrieve_allns_hpa() {
+
+            $('#showAllHPA_table').DataTable({
+
+                "ajax": '/hpa/showall/',
+                "columnDefs": [
+                    {
+                        "targets": -1,
+                        "data": null,
+                        "defaultContent": action_html
+                    }
+                ],
+
+                "columns":
+                    [
+                        {"data": "apiVersion"},
+                        {"data": "kind"},
+                        {"data": "created_at"},
+                        {"data": "name"},
+                        {"data": "namespace"},
+                        {"data": "uid"},
+                        {"data": "max_replicas", "width": "1%"},
+                        {"data": "min_replicas", "width": "1%"},
+                        {"data": "target_ref", "width": "3%"},
+                        {"data": "CPU_Util_percent", "width": "1%"},
+                        {"data": "current_CPU_util_percent", "width": "2%", className: "cpu_percent"},
+                        {"data": "current_replicas", "width": "1%"},
+                        {"data": "desired_replicas", "width": "1%"},
+                        {#                            {"data": "last_scale_time", "width": "1%"},#}
+                        {"data": "action", "width": "10%"}
+                    ]
+            });
+            editTable([6, 7, 9]);
+
+        }
+
+
+        $("li[role='presentation']").click(function () {
+            $(this).addClass('active').siblings().removeClass('active');
+            var a1 = $(this).attr('class');
+            if (a1 === 'home active') {
+                $('#home').removeClass('hide').siblings().addClass('hide');
+            }
+            if (a1 === 'test1 active') {
+                $('#test1').removeClass('hide').siblings().addClass('hide');
+                push_hcn();
+            }
+        }); //function end.
+
+
+        function push_hcn() {
+
+            var source = new EventSource("/hpa/alertbox/");
+            source.addEventListener('message', function (e) {
+                var msg_array = e.data.split('&');
+                console.log(msg_array, msg_array[0]);
+                getresources();
+            })
+
+        }
+
+
+        $('#select_hpa_test').on('change', function () {
+
+            getresources()
+
+        });
+
+
+        function getresources() {
+            var select_hpa = $('#select_hpa_test').val();
+            var select_ns = $('#select_namespace_test').val();
+            $.ajax({
+                url: '/hpa/getresources/',
+                type: 'post',
+                data: {hpa: select_hpa, ns: select_ns},
+                success: function (response) {
+                    ret = JSON.parse(response);
+
+                    gen_relation_chart(ret.data.svc_name, ret.data.pod_list);
+                }
+            })
+        }
+
+
+        function gen_relation_chart(svc, pods) {
+            var rel_list = [];
+            var resource_list = [];
+            $.ajax({
+                url: 'http://192.168.151.15:5555/cluster',
+                type: 'get',
+                dataType: 'json',
+                success: function (response) {
+
+                    $.each(response.relations, function (idx, e) {
+                        if (e.source === 'Service:' + svc) {
+                            rel_list.push({
+                                'source': this.source,
+                                'target': this.target,
+                                'value': this.type
+                            });
+
+                        }
+
+                    });
+                    {#                    $.each(pods, function (idx, pod) {#}
+                    {##}
+                    {#                        $.each(response.relations, function (idx, e) {#}
+                    {#                            if (e.source === 'Pod:' + pod) {#}
+                    {##}
+                    {#                                rel_list.push({#}
+                    {#                                    'source': this.source,#}
+                    {#                                    'target': this.target.slice(0, 9),#}
+                    {#                                    'value': this.type#}
+                    {#                                });#}
+                    {#                            }#}
+                    {##}
+                    {#                        })#}
+                    {#                    });#}
+
+                    $.each(response.resources, function (idx, e) {
+                        if (e.id === 'Service:' + svc) {
+                            resource_list.push({
+                                'id': this.id,
+                                'label': this.annotations.label,
+                                'group': this.type
+                            })
+
+                        }
+
+                    });
+
+                    $.each(pods, function (idx, pod) {
+
+                        $.each(response.resources, function (idx, e) {
+                            if (e.id === 'Pod:' + pod) {
+
+                                resource_list.push({
+                                    'id': this.id,
+                                    'label': this.annotations.label,
+                                    'group': this.type
+                                })
+                            }
+
+                        })
+                    });
+
+                    var json_data = {
+                        links: rel_list,
+                        nodes: resource_list
+                    };
+                    {#                    $('#hpa_loadtest').empty();#}
+                    hpa_loadtest(json_data, '#hpa_loadtest')
+
+
+                }
+
+            })
+
+
+        }
+
+
+        function hpa_loadtest(data, svg) {
+
+
+            {#            setInterval(function () {#}
+            {##}
+            $('#hpa_loadtest').empty();
+            update(data, svg);
+            {#            }, 5000);#}
+
+        }
+
+        function update(jdata, svg_elem) {
+            var svg = d3.select(svg_elem);
+            width = +svg.attr("width");
+            height = +svg.attr("height");
+
+            var color = d3.scaleOrdinal(d3.schemeCategory20);
+
+            var simulation = d3.forceSimulation()
+                .force("link", d3.forceLink().id(function (d) {
+                    return d.id;
+                }).distance(100).strength(1))
+                .force("charge", d3.forceManyBody())
+                .force("center", d3.forceCenter(width / 2, height / 2));
+
+            /* Arrow start */
+            svg.append("defs").selectAll("marker")
+                .data(["suit", "licensing", "resolved"])
+                .enter().append("marker")
+                .attr("id", function (d) {
+                    return d;
+                })
+                .attr("viewBox", "0 -5 10 10")
+                .attr("refX", 25)
+                .attr("refY", 0)
+                .attr("markerWidth", 6)
+                .attr("markerHeight", 6)
+                .attr("orient", "auto")
+                .append("path")
+                .attr("d", "M0,-5L10,0L0,5 L10,0 L0, -5")
+                .style("stroke", "#4679BD")
+                .style("opacity", "0.8");
+            /* Arrow end */
+
+            var link = svg.append("g")
+                .attr("class", "links")
+                .selectAll("line")
+                .data(jdata.links)
+                .enter().append("line")
+                .style("stroke-width", function (d) {
+                    return Math.sqrt(4);
+                })
+                .style("marker-end", "url(#suit)");
+            /* Arrow */
+
+            var node = svg.append("g")
+                .attr("class", "nodes")
+                .selectAll("circle")
+                .data(jdata.nodes)
+                .enter().append("circle")
+                .attr("r", 15)
+                .attr("fill", function (d) {
+                    return color(d.group);
+                })
+
+                .call(d3.drag()
+                    .on("start", dragstarted)
+                    .on("drag", dragged)
+                    .on("end", dragended))
+            {#                    .on('click', showProperty);#}
+
+
+            node.append("title")
+                .text(function (d) {
+                    return d.id
+                })
+                .attr("name", function (d) {
+                    return d.group
+                });
+
+            simulation
+                .nodes(jdata.nodes)
+                .on("tick", ticked);
+
+
+            simulation
+                .force("link")
+                .links(jdata.links);
+
+
+            function ticked() {
+                link
+                    .attr("x1", function (d) {
+                        return d.source.x;
+                    })
+                    .attr("y1", function (d) {
+                        return d.source.y;
+                    })
+                    .attr("x2", function (d) {
+                        return d.target.x;
+                    })
+                    .attr("y2", function (d) {
+                        return d.target.y;
+                    });
+
+                node
+                    .attr("cx", function (d) {
+                        return d.x;
+                    })
+                    .attr("cy", function (d) {
+                        return d.y;
+                    });
+            }
+
+            function dragstarted(d) {
+                if (!d3.event.active) simulation.alphaTarget(0.3).restart();
+                d.fx = d.x;
+                d.fy = d.y;
+            }
+
+            function dragged(d) {
+                d.fx = d3.event.x;
+                d.fy = d3.event.y;
+            }
+
+            function dragended(d) {
+                if (!d3.event.active) simulation.alphaTarget(0);
+                d.fx = null;
+                d.fy = null;
+            }
+
+
+        }
+
+
+        $('#select_namespace_test').on('change', function () {
+            var select = $(this).val();
+            var that = $('#select_hpa_test');
+            $.ajax({
+                url: '/hpa/showall/',
+                type: 'post',
+                data: {namespace: select},
+                success: function (res) {
+
+                    ret = JSON.parse(res);
+                    if (ret.data.length > 0) {
+
+                        $.each(ret.data, function (idx, e) {
+                            html = '<option>' + e.name + '</option>';
+                            that.append(html);
+                            test.selectpicker('refresh')
+
+                        })
+                    }
+                    else {
+                        test.children('option').remove();
+                        test.selectpicker('refresh');
+
+                    }
+                    return false
+                }
+            })
+
+        });
+
+        $('#select_namespace').on('change', function () {
+            var selected_ns = $(this).val();
+            {#            $('#select_hpa_deployment').empty();#}
+            $.ajax({
+                url: '/hpa/selectns/',
+                type: 'post',
+                data: {'namespace': selected_ns},
+                success: function (res) {
+                    ret = JSON.parse(res);
+                    if (ret.data.length > 0) {
+                        $.each(ret.data, function (idx, e) {
+                            html = '<option>' + e.deployment_name + '</option>';
+                            $('#select_hpa_deployment').append(html)
+                            $('#select_hpa_deployment').selectpicker('refresh')
+                        })
+                    }
+                    else {
+                        $('#select_hpa_deployment').children('option').remove();
+                        $('#select_hpa_deployment').selectpicker('refresh');
+
+                    }
+
+                }
+            });
+        });
+
+
+        $('#create_hpa').on('click', function () {
+
+            var select = $(this).parents().find('#select_hpa_deployment').val().trim();
+            $.ajax({
+                url: '/hpa/addhpa/',
+                type: 'post',
+                data: {'input_data': $('#add_hpa_frm').serialize()},
+                beforeSend: function () {
+
+                    $('#collapseExample').collapse('hide');
+                    $('#addhpa_loading_spinner').removeClass('hide')
+
+
+                },
+                success: function (e) {
+                    ret = JSON.parse(e);
+                    if (ret.data.status_code === 200) {
+
+                        setTimeout(function () {
+                            $('#addhpa_loading_spinner').addClass('hide');
+                            $('#addhpa_completed_icon').removeClass('hide');
+
+                        }, 1000);
+                        $('#addhpa_completed_icon').addClass('hide');
+                        refresh_dataTable($('#showAllHPA_table'));
+                        var msg = "HPA" + "\t<strong>" + select + "</strong>\t" + "has been created successfully";
+                        notification_success(msg);
+
+
+                    }
+
+
+                }
+
+            });
+
+        });
+
+
+        $(document).on('click', 'a[name=remove_hpa]', function () {
+            var select_hpa = $(this).parents('tr').children('td').eq(3).text();
+            var select_ns = $(this).parents('tr').children('td').eq(4).text();
+            var ths = $(this);
+            // confirm_dialog is Callback Function, it will trigger to remove row from table immediately when confirm windows return true.
+            confirm_dialog('remove', select_hpa, function (resp) {
+                if (resp) {
+
+
+                    ths.parents('tr').remove();
+                    remove_selected_hpa(select_hpa, select_ns)
+
+                }
+                else {
+                    console.log('error')
+                }
+            });
+
+
+        });
+
+        function remove_selected_hpa(sel_hpa, sel_ns) {
+            $.ajax({
+                url: '/hpa/removehpa/',
+                type: 'post',
+                data: { hpa: sel_hpa, ns: sel_ns},
+                success: function (resp) {
+                    ret = JSON.parse(resp);
+                    if (ret.data === 200) {
+                        var msg = "HPA" + "\t<strong>" + sel_hpa + "</strong>\t" + "has been removed successfully";
+                        notification_success(msg);
+                    }
+                    else {
+                        notification_err('Error')
+                    }
+
+                }
+            })
+        }
+
+
+        $('#addhpa_frm_close').on('click', function () {
+
+            $('#collapseExample').collapse('hide');
+
+        });
+        $('#addhpa_frm_refresh').on('click', function () {
+            refresh_dataTable($('#showAllHPA_table'));
+        });
+
+        {#        $('#collapseCPUGraph').on('shown.bs.collapse', function () {#}
+        {#            var current_ns = $('#ns_select').val();#}
+        {#            hpa_change_alert(true);#}
+        {#        });#}
+        {#        $('#collapseCPUGraph').on('hidden.bs.collapse', function () {#}
+        {#            hpa_change_alert(false)#}
+        {#        });#}
+
+        function threhold_notification() {
+            setInterval(function () {
+                $('#showAllHPA_table').find('.cpu_percent').each(function () {
+                    if ($(this).text() > 100) {
+                        $(this).css('background-color', '#FFCCE6')
+                    }
+                    else {
+                        return;
+                    }
+                });
+            }, 5000);
+
+
+            refresh_dataTable($('#showAllHPA_table'));
+
+        }
+
+
+        function update_table(field_obj) {
+            $.ajax({
+                url: '/hpa/tableupdate/',
+                type: 'post',
+{#                data: { name: JSON.stringify(field_obj.name), namespace: JSON.stringify(field_obj.namespace), #}
+{#                    min_replicas: JSON.stringify(field_obj.min_replicas), max_replicas: JSON.stringify(field_obj.max_replicas) },#}
+                data: { content: JSON.stringify(field_obj)},
+                success: function (e) {
+                    ret = JSON.parse(e);
+                    if (ret.data === 201) {
+                       var msg = "HPA" + "\t<strong>" + field_obj.name + "</strong>\t" + "has been updated successfully";
+                        notification_success(msg);
+                    }
+                    else  {
+                        alert ('Error!')
+                    }
+                }
+
+
+            })
+
+        }
+
+        {#        $(function () {#}
+        {##}
+        {#            $('#add_hpa_frm').validate({#}
+        {##}
+        {#                rules: {#}
+        {#                    current_srvs: "required",#}
+        {#                    hpa_name: {#}
+        {#                        required: true,#}
+        {#                        minlength: 6#}
+        {#                    },#}
+        {#                    quant1: {#}
+        {#                        required: true,#}
+        {#                        minlength: 1,#}
+        {#                        maxlength: 100#}
+        {#                    },#}
+        {#                    quant2: {#}
+        {#                        required: true,#}
+        {#                        minlength: 1,#}
+        {#                        maxlength: 100#}
+        {#                    },#}
+        {#                    cpu_threshold: {#}
+        {#                        required: true,#}
+        {#                        minlength: 1,#}
+        {#                        maxlength: 100#}
+        {#                    }#}
+        {#                },#}
+        {#                messages: {#}
+        {#                    current_srvs: "This field is required",#}
+        {#                    hpa_name: "HPA name must be at least 6 characters long",#}
+        {#                    quant1: {#}
+        {#                        required: "This field is required",#}
+        {#                        minlength: "Value must be greater than 1",#}
+        {#                        maxlength: "Value must be less than 100"#}
+        {#                    },#}
+        {#                    quant2: {#}
+        {#                        required: "This field is required",#}
+        {#                        minlength: "Value must be greater than 1",#}
+        {#                        maxlength: "Value must be less than 100"#}
+        {#                    },#}
+        {#                    cpu_threshold: {#}
+        {#                        required: "This field is required",#}
+        {#                        minlength: "Value must be greater than 1",#}
+        {#                        maxlength: "Value must be less than 100"#}
+        {#                    }#}
+        {#                },#}
+        {##}
+        {#                submitHandler: function (form) {#}
+        {#                    form.submit();#}
+        {#                }#}
+        {##}
+        {##}
+        {#            });#}
+        {#        });#}
+
+
+    </script>
+
+
+
+{% endblock %}
+
+
+

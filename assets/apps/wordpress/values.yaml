@@ -1,0 +1,107 @@
+image: registry.allbright.local:5000/wordpress:4.8.1-r1 #fixed
+
+imagePullPolicy: IfNotPresent # select
+
+imagePullSecrets: regsecret-admin #select
+
+replicas: 1 #input
+
+wordpressUsername: brian #input
+
+wordpressPassword: "999" #input
+
+wordpressEmail: wordpress@example.com
+
+wordpressFirstName: wordpress #input
+
+wordpressLastName: wordpress #input
+
+wordpressBlogName: WPBlog
+
+
+
+allowEmptyPassword: False #boolean
+
+
+mariadb:
+  ## MariaDB admin password
+  ## ref: https://github.com/bitnami/bitnami-docker-mariadb/blob/master/README.md#setting-the-root-password-on-first-run
+  ##
+  mariadbRootPassword: "999" #input
+
+  ## Create a database
+  ## ref: https://github.com/bitnami/bitnami-docker-mariadb/blob/master/README.md#creating-a-database-on-first-run
+  ##
+  mariadbDatabase: "wpdb" #input
+
+  ## Create a database user
+  ## ref: https://github.com/bitnami/bitnami-docker-mariadb/blob/master/README.md#creating-a-database-user-on-first-run
+  ##
+  mariadbUser: "admin" #input
+
+  ## Password for mariadbUser
+  ## ref: https://github.com/bitnami/bitnami-docker-mariadb/blob/master/README.md#creating-a-database-user-on-first-run
+  ##
+  mariadbPassword: "111" #input
+
+  ## Enable persistence using Persistent Volume Claims
+  ## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
+  ##
+  persistence:
+
+    enabled: True # boolean
+
+    ## If defined, volume.beta.kubernetes.io/storage-class: <storageClass>
+    ## Default: volume.alpha.kubernetes.io/storage-class: default
+    ##
+    storageClass: fast #select
+    accessMode: ReadWriteOnce #seect
+    size: 2Gi #input
+
+serviceType: ClusterIP #select
+
+healthcheckHttps: False # boolean
+
+ingress:
+
+  enabled: True # boolean
+
+  hostname: vhost6.allbright.local #input}
+
+    ## Ingress annotations
+    ##
+  annotations:
+    #input
+    kubernetes.io/ingress.class: nginx # key:value#input
+    ingress.kubernetes.io/ssl-redirect: "false" # key:value#input
+    ingress.kubernetes.io/proxy-body-size: 500m # key:value 
+#      kubernetes.io/ingress.class: nginx
+#      ingress.kubernetes.io/ssl-redirect: "false"
+#      ingress.kubernetes.io/proxy-body-size: 500m
+    ## Ingress TLS configuration
+    ## Secrets must be manually created in the namespace
+    ##
+  tls:
+    - secretName: ingress-tls #select
+      hosts:
+        - vhost6.allbright.local #input
+
+persistence:
+
+  enabled: True # boolean
+
+  ## If defined, volume.beta.kubernetes.io/storage-class: <storageClass>
+  ## Default: volume.alpha.kubernetes.io/storage-class: default
+  ##
+  storageClass: standard #select
+  accessMode: ReadWriteOnce #select
+  size: 2Gi #input
+
+resources:
+  requests:
+    memory: 200Mi #input
+    cpu: 100m #input
+
+  limits:
+    memory: 500Mi
+    cpu: 300m

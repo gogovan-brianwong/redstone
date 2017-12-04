@@ -1,0 +1,91 @@
+<div id="settings_apiserver" class="tab-pane fade in active col-md-6">
+
+    <form action="#" class="form-horizontal">
+        <div class="form-group" style="position: relative;">
+            <label class="col-md-3 control-label" for="apiurl">API URL:</label>
+
+                <span class="input-group">
+                <span class="input-group-addon" id="setting-apiurl-addon-1"><strong>https://</strong></span>
+                <input class="form-control" type="text"
+                       id="setting_apiurl"
+                       name="setting_apiurl"
+                       placeholder="[ip address]:[port]" aria-describedby="setting-apiurl-addon">
+                </span>
+            <a name="setting_apiurl_save" href="#" style="position: absolute; right: -100px; top: 0" class="btn btn-success btn-sm">Save</a>
+            <a name="setting_apiurl_edit" href="#" style="position: absolute; right: -160px; top: 0" class="btn btn-primary btn-sm">Edit</a>
+            <a name="setting_apiurl_testconn" href="#" style="position: absolute; right: -290px; top: 0" class="btn btn-danger btn-sm" >Test Connection</a>
+        </div>
+
+        <div class="form-group" style="position: relative;">
+            <label class="col-md-3 control-label" for="apiserver_manifest_path">Manifests path:</label>
+            <span class="input-group">
+
+            <input class="form-control" type="text"
+                   id="apiserver_manifest_path"
+                   name="apiserver_manifest_path"
+                   placeholder="eg. /etc/kubernetes/manifests">
+             <span class="input-group-addon" id="setting-apiurl-addon"><i class="fa fa-pencil"></i></span>
+         </span>
+        <a name="setting_manifest_browse_btn" href="#" style="position: absolute; right: -100px; top: 0" class="btn btn-sm btn-info">Browse</a>
+        </div>
+    </form>
+
+</div>
+<div class="col-md-12" id="apiserver_manifest">
+    <hr class="style14">
+
+</div>
+<script>
+
+    $('a[name=setting_apiurl_save]').on('click', function () {
+
+        $(this).prop('disabled','disabled').next().removeAttr('disabled','disabled');
+        var $api_url = $('input[name=setting_apiurl]');
+        $api_url.prop('disabled', 'disabled');
+        console.log($api_url.val())
+
+    });
+
+
+    $('a[name=setting_apiurl_edit]').on('click', function () {
+
+        $(this).prop('disabled','disabled').prev().removeAttr('disabled','disabled');
+        var $api_url = $('input[name=setting_apiurl]');
+        $api_url.removeAttr('disabled', 'disabled').focus();
+
+
+    });
+    $('a[name=setting_manifest_browse_btn]').on('click', function () {
+
+        apisrv_mani_path = $('input[name=apiserver_manifest_path]').val();
+        console.log(apisrv_mani_path);
+
+        $.ajax({
+            url: '/systemconfig/apiserver/manifest/',
+            type: 'get',
+            success: function (e) {
+                ret = JSON.parse(e);
+                console.log(ret)
+
+            }
+
+
+        })
+
+    })
+
+{#    $('a[name=setting_apiurl_testconn]').on('click', function () {#}
+{#        $.ajax({#}
+{#            url: '/systemconfig/apiserver/testconnection/',#}
+{#            type:'get',#}
+{#            success: function (e) {#}
+{#                ret = JSON.parse(e)#}
+{#                console.log(ret)#}
+{#            }#}
+{#            #}
+{#        })#}
+{##}
+{#    })#}
+
+
+</script>

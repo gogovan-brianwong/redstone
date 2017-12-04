@@ -1,0 +1,252 @@
+<div class="col-md-12 hide" id="selectNodeDetailCarousel">
+    <div class="row">
+        <div class="col-md-1">
+            <button name="backToNode" class="btn btn-info btn-sm"><i class="glyphicon glyphicon-arrow-down"></i>
+            </button>
+
+        </div>
+
+        <div class="col-md-5 form-group-toponly">
+            <p class="node-detail-title pull-right" style="font-size: 30px"></p>
+
+
+        </div>
+    </div>
+
+    <div style="position: relative">
+        <hr class="style14">
+        <span style="display: inline-block; background-color: #eeeeee; border: 0; padding: 10px; border-spacing: 5px; position: absolute; z-index: 40; top:-20px; left:730px">Overview</span>
+    </div>
+
+    <div class="row" id="overview_section">
+
+
+        <div class="col-md-6 form-group-toponly form-group-k8s">
+
+            <span class="col-md-1 ">
+                <p class="fieldname">NAME: </p>
+            </span>
+            <span id="node_name" class="col-md-offset-1 col-md-6">
+{#                <p class="fieldcontent"></p>#}
+
+            </span>
+        </div>
+        <div class="col-md-6 form-group-toponly  form-group-k8s">
+            <span class="col-md-1">
+                <p class="fieldname">UNIQUE ID:</p>
+
+            </span>
+            <span id="node_unique_id" class="col-md-offset-1 col-md-6">
+{#                <p class="fieldcontent">bca481dd-5a54-11e7-addb-000c296cc8d9</p>#}
+
+            </span>
+        </div>
+        <div class="col-md-6 form-group-k8s">
+            <span class="col-md-1">
+                <p class="fieldname">ANNOTATIONS:</p>
+
+            </span>
+
+            <span id="annotations" class="col-md-offset-1 col-md-7">
+                <input type="text" name="node_annotations" data-role="tagsinput" value="">
+            </span>
+
+
+        </div>
+
+        <div class="col-md-6 form-group-k8s">
+            <span class="col-md-1">
+                <p class="fieldname">CREATED AT:</p>
+            </span>
+            <span id="node_create_time" class="col-md-offset-1 col-md-6">
+
+            </span>
+        </div>
+
+
+        <div class="col-md-6 form-group-k8s">
+            <span class="col-md-1">
+                <p class="fieldname">UNSCHEDULABLE:</p>
+
+            </span>
+             <span class="col-md-offset-1 col-md-6">
+                <span class="material-switch">
+                    <input id="nodeSchedulable" name="nodeSchedulable" type="checkbox"/>
+                    <label for="nodeSchedulable" class="label-success"></label>
+
+                </span>
+            </span>
+        </div>
+
+        <div class="col-md-6 form-group-k8s">
+            <span class="col-md-1">
+                <p class="fieldname">LABELS:</p>
+            </span>
+            <span id="labels" class="col-md-offset-1 col-md-7">
+
+                <input type="text" name="node_labels" data-role="tagsinput" value="">
+
+            </span>
+
+        </div>
+
+
+        <div class="col-md-6 form-group-k8s">
+            <span class="col-md-1">
+                <p class="fieldname">IP ADDRESS:</p>
+            </span>
+
+            <span id="node_ipaddr" class="col-md-offset-1 col-md-6">
+{#                <p class="fieldcontent">192.168.151.15</p>#}
+            </span>
+
+        </div>
+        <div class="col-md-6 form-group-k8s">
+
+            <span class="col-md-1 ">
+                <button id="updatebtn" class="btn btn-success btn-sm">Update</button>
+            </span>
+
+        </div>
+
+
+    </div>
+    <div class="col-md-12" style="position: relative">
+        <hr class="style14">
+
+        <span style="display: inline-block; background-color: #eeeeee; border: 0; padding: 10px; border-spacing: 5px; position: absolute; z-index: 40; top: 0; left:700px;">Machine Information</span>
+
+    </div>
+    <div class="row" id="machine_section">
+
+        <div class="col-md-6 form-group-toponly form-group-k8s">
+
+            <span class="col-md-1 ">
+                <p class="fieldname">MACHINE ID: </p>
+
+
+            </span>
+            <span id="machine_id" class=" col-md-offset-1 col-md-6">
+                <p class="fieldcontent">"833e0926ee21aed71ec075d726cbcfe0"</p>
+
+            </span>
+        </div>
+
+        <div class="col-md-6 form-group-toponly form-group-k8s">
+
+            <span class="col-md-1 ">
+                <p class="fieldname">SYSTEM UUID:</p>
+
+            </span>
+            <span id="system_uuid" class=" col-md-offset-1 col-md-6">
+                <p class="fieldcontent">564DF74A-8594-74CE-877A-E502210EED70</p>
+
+            </span>
+        </div>
+
+        <div class="col-md-6 form-group-k8s">
+
+            <span class="col-md-1 ">
+                <p class="fieldname">BOOT ID:</p>
+
+
+            </span>
+            <span id="boot_id" class=" col-md-offset-1 col-md-6">
+                <p class="fieldcontent">80f49919-764c-4ff2-af89-910eaed71c38</p>
+
+            </span>
+        </div>
+
+        <div class="col-md-6 form-group-k8s">
+
+            <span class="col-md-1 ">
+                <p class="fieldname">Kernel Version</p>
+
+
+            </span>
+            <span id="kernel_ver" class=" col-md-offset-1 col-md-6">
+                <p class="fieldcontent">4.12.10-coreos</p>
+
+            </span>
+        </div>
+        <div class="col-md-6 form-group-k8s">
+
+            <span class="col-md-1 ">
+                <p class="fieldname">OS Image</p>
+
+
+            </span>
+            <span id="os_image" class=" col-md-offset-1 col-md-6">
+                <p class="fieldcontent">"Container Linux by CoreOS 1465.7.0 (Ladybug)"</p>
+
+            </span>
+        </div>
+
+        <div class="col-md-6 form-group-k8s">
+
+            <span class="col-md-1">
+                <p class="fieldname">Container Runtime Version:</p>
+
+
+            </span>
+            <span id="container_runtime" class=" col-md-offset-2 col-md-1">
+                <p class="fieldcontent">docker://1.12.6</p>
+
+            </span>
+        </div>
+
+        <div class="col-md-6 form-group-k8s">
+
+            <span class="col-md-1 ">
+                <p class="fieldname">Kubelet Version</p>
+
+
+            </span>
+            <span id="kublet_ver" class=" col-md-offset-1 col-md-6">
+                <p class="fieldcontent">v1.7.2+coreos.0</p>
+
+            </span>
+        </div>
+        <div class="col-md-6 form-group-k8s">
+
+            <span class="col-md-1 ">
+                <p class="fieldname">OS Type</p>
+
+
+            </span>
+            <span id="os_type" class=" col-md-offset-1 col-md-6">
+                <p class="fieldcontent">linux</p>
+
+            </span>
+        </div>
+    </div> <!-- machine info Row end -->
+
+
+    <div class="col-md-12" style="position: relative">
+        <hr class="style14">
+
+        <span style="display: inline-block; background-color: #eeeeee; border: 0; padding: 10px; border-spacing: 5px; position: absolute; z-index: 40; top: 0; left:700px;">Images on node</span>
+
+    </div>
+
+
+    <div class="row" id="images_section"> <!-- Image row start -->
+        <div class="col-md-8 form-group-toponly form-group-k8s">
+
+            <div id="image_table">
+
+
+            </div>
+        </div>
+
+
+    </div> <!-- Image row end -->
+
+
+</div>
+
+
+
+
+
+
