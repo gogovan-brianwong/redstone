@@ -2,21 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="440245d9-0010-4339-a03c-5d3d8ff9a4f3" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/README.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/k8s.iml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/assets/certs/client.crt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/assets/certs/client.key" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/certs/ca.pem" afterPath="" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/2.PNG" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Infrastructure/conf/APIAuth_param.py" afterPath="$PROJECT_DIR$/Infrastructure/conf/APIAuth_param.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/a2/settings.py" afterPath="$PROJECT_DIR$/a2/settings.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/certs/ca.crt" afterPath="$PROJECT_DIR$/assets/certs/ca.crt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/certs/kubeconfig-dev.yaml" afterPath="$PROJECT_DIR$/assets/certs/kubeconfig-dev.yaml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/topology_index.html" afterPath="$PROJECT_DIR$/templates/topology_index.html" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -66,8 +53,8 @@
       <file leaf-file-name="topology_index.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/templates/topology_index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="285">
-              <caret line="86" column="99" lean-forward="true" selection-start-line="86" selection-start-column="99" selection-end-line="86" selection-end-column="99" />
+            <state relative-caret-position="399">
+              <caret line="92" column="37" lean-forward="false" selection-start-line="92" selection-start-column="37" selection-end-line="92" selection-end-column="37" />
               <folding />
             </state>
           </provider>
@@ -463,7 +450,14 @@
       <option name="project" value="LOCAL" />
       <updated>1512367391379</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="1">
+      <created>1512372050811</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1512372050811</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -886,8 +880,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/templates/topology_index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="86" column="99" lean-forward="true" selection-start-line="86" selection-start-column="99" selection-end-line="86" selection-end-column="99" />
+        <state relative-caret-position="399">
+          <caret line="92" column="37" lean-forward="false" selection-start-line="92" selection-start-column="37" selection-end-line="92" selection-end-column="37" />
           <folding />
         </state>
       </provider>
