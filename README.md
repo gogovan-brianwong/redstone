@@ -15,6 +15,7 @@ Backend:
   - Kubernetes python lib ( install kubernetes via pip )
   - Paramiko
 
+For screenshot , take a look at REAME.PNG :)
   
   
 
