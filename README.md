@@ -6,7 +6,7 @@ Frontend:
   - bootstrap
   - jQuery
   - D3 Force
-  ...
+
 Backend:
   - Django
   - MySQL or Mariadb
@@ -14,8 +14,7 @@ Backend:
   - Jinja2
   - Kubernetes python lib ( install kubernetes via pip )
   - Paramiko
-  ...
-  
+
   
   
 
