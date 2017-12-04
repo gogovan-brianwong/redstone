@@ -106,11 +106,11 @@ DATABASES = {
     # },
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'k8s',
-        'USER': 'root',
-        'PASSWORD': 'allbright',
+        'NAME': 'redstone',
+        'USER': 'admin',
+        'PASSWORD': 'admin',
         # 'HOST': os.environ['PXC_CLUSTER_SERVICE_HOST'],
-        'HOST': '192.168.151.44',
+        'HOST': '47.52.242.147',
         'PORT': '3306',
         # 'OPTIONS': {
         #     'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
