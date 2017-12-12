@@ -1,4 +1,4 @@
-Web admin UI for Kubernetes cluster. Work in active development!
+Web admin UI for Kubernetes cluster. 
 
 Requirement:
 
