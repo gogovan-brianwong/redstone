@@ -18,7 +18,7 @@ Backend (Framework and libraries):
 For screenshot , take a look at REAME.PNG :)
 
 ![Image of topology](https://github.com/brianwong1861/redstone/blob/master/README.png)
-![Image of AddHost](https://github.com/brianwong1861/redstone/blob/master/README2.png)
+![Image of AddHost](https://github.com/brianwong1861/redstone/blob/master/2.png)
   
   
 
