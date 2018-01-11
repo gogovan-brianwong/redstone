@@ -15,10 +15,10 @@ Backend (Framework and libraries):
   - Kubernetes python lib ( install kubernetes via pip )
   - Paramiko
 
-For screenshot , take a look at REAME.PNG :)
+Screenshot:-
 
 ![Image of topology](https://github.com/brianwong1861/redstone/blob/master/README.png)
-![Image of AddHost](https://github.com/brianwong1861/redstone/blob/master/2.png)
+![Image of AddHost](https://github.com/brianwong1861/redstone/blob/master/2.PNG)
   
   
 
