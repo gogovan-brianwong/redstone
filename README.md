@@ -17,7 +17,7 @@ Backend:
 
 For screenshot , take a look at REAME.PNG :)
 
-[!https://github.com/brianwong1861/redstone/blob/master/README.png]
+![Image of topology](https://github.com/brianwong1861/redstone/blob/master/README.png)
   
   
 
