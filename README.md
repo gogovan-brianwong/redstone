@@ -7,7 +7,7 @@ Frontend:
   - jQuery
   - D3 Force
 
-Backend:
+Backend (Framework and libraries):
   - Django
   - MySQL or Mariadb
   - PyMySQL
@@ -18,6 +18,7 @@ Backend:
 For screenshot , take a look at REAME.PNG :)
 
 ![Image of topology](https://github.com/brianwong1861/redstone/blob/master/README.png)
+![Image of AddHost](https://github.com/brianwong1861/redstone/blob/master/README2.png)
   
   
 
